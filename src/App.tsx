@@ -1,14 +1,12 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Home from './controllers/home';
+import RouterBuilder from './controllers/routes_builder';
+import ContextsProvider from './models/contexts_provider';
 
-function App() {
+const App = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-      </Routes>
-    </BrowserRouter>
+    <ContextsProvider>
+      <RouterBuilder />
+    </ContextsProvider>
   );
-}
+};
 
 export default App;

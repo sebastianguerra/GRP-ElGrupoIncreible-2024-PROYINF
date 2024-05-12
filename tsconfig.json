@@ -10,6 +10,7 @@
     "baseUrl": "src",
     "paths": {
       "@controllers/*": ["controllers/*"],
+      "@models/*": ["models/*"],
     },
 
     /* Bundler mode */

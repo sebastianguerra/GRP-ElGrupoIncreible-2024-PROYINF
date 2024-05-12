@@ -26,8 +26,13 @@ module.exports = {
       {
         alias: {
           '@controllers': './src/controllers',
+          '@models': './src/models',
         },
       },
+    ],
+    'react/function-component-definition': [
+      'error',
+      { namedComponents: 'arrow-function', unnamedComponents: 'arrow-function' },
     ],
   },
   settings: {

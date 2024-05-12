@@ -1,9 +1,14 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Home from '@controllers/home';
+
 function App() {
   return (
-    <>
-      Hello World!
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<Home />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;

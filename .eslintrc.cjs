@@ -10,30 +10,29 @@ module.exports = {
     'plugin:@typescript-eslint/strict-type-checked',
     'airbnb-typescript',
     'plugin:prettier/recommended',
+    'plugin:@dword-design/import-alias/recommended',
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs', 'vite.config.ts'],
   parser: '@typescript-eslint/parser',
-  plugins: [
-    'react-refresh',
-    '@typescript-eslint',
-    'import',
-    'react',
-    'react-hooks',
-    'prettier',
-  ],
+  plugins: ['react-refresh', '@typescript-eslint', 'import', 'react', 'react-hooks', 'prettier'],
   parserOptions: {
     project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname
+    tsconfigRootDir: __dirname,
   },
   rules: {
-    'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
+    'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+    '@dword-design/import-alias/prefer-alias': [
+      'error',
+      {
+        alias: {
+          '@controllers': './src/controllers',
+        },
+      },
     ],
   },
   settings: {
-    'react': {
-      'version': 'detect',
+    react: {
+      version: 'detect',
     },
   },
-}
+};

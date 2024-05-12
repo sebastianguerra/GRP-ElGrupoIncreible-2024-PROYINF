@@ -9,6 +9,7 @@ module.exports = {
     'plugin:@typescript-eslint/stylistic-type-checked',
     'plugin:@typescript-eslint/strict-type-checked',
     'airbnb-typescript',
+    'plugin:prettier/recommended',
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs', 'vite.config.ts'],
   parser: '@typescript-eslint/parser',
@@ -18,6 +19,7 @@ module.exports = {
     'import',
     'react',
     'react-hooks',
+    'prettier',
   ],
   parserOptions: {
     project: ['./tsconfig.json', './tsconfig.node.json'],

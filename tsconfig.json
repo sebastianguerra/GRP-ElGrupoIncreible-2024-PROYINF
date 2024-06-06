@@ -10,7 +10,7 @@
     "baseUrl": "src",
     "paths": {
       "@controllers/*": ["controllers/*"],
-      "@models/*": ["models/*"],
+      "@models/*": ["models/*"]
     },
 
     /* Bundler mode */
@@ -27,6 +27,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": ["src", "declarations.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

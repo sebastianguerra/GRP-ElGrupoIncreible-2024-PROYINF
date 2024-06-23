@@ -51,7 +51,7 @@ const App = () => {
       borderColor="black"
       onDragOverColor="blue"
       style={{
-        height: '97vh',
+        height: '100vh',
         width: '100%',
         display: 'flex',
         flexDirection: 'row',

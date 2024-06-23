@@ -4,12 +4,13 @@ interface DropInputProps extends PropsWithChildren {
   onDragOverColor?: string;
   borderColor?: string;
   onDrop: (files: FileList) => void;
+  style?: React.CSSProperties;
 }
 
 const DropInput: React.FC<DropInputProps> = (props) => {
   const elementRef = useRef<HTMLDivElement>(null);
 
-  const { children, onDrop, onDragOverColor, borderColor: propsBorderColor } = props;
+  const { children, onDrop, onDragOverColor, borderColor: propsBorderColor, style = {} } = props;
   const [element, setElement] = useState<HTMLDivElement | null>(null);
 
   const [isDragOver, setIsDragOver] = useState(false);
@@ -58,7 +59,10 @@ const DropInput: React.FC<DropInputProps> = (props) => {
   }, [element, onDrop]);
 
   return (
-    <div ref={elementRef} style={{ borderColor, borderWidth: '3px', borderStyle: 'solid' }}>
+    <div
+      ref={elementRef}
+      style={{ borderWidth: '3px', borderStyle: 'solid', ...style, borderColor }}
+    >
       {children}
     </div>
   );

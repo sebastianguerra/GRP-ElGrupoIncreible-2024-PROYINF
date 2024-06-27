@@ -1,11 +1,14 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Home from './home';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import Viewer from './viewer';
+import Login from './login';
 
 const RouterBuilder = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/viewer" element={<Viewer />} />
+        <Route path="/" element={<Navigate to="/viewer" />} />
       </Routes>
     </BrowserRouter>
   );

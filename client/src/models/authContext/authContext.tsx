@@ -7,6 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import useLocalStorage from 'hooks/useLocalStorage';
 
 export interface IUser {
   username: string;
@@ -28,7 +29,7 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [user, setUser] = useState<IUser | null>(null);
 
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useLocalStorage<string | null>('token', null);
 
   const queryResponse = useQuery({
     queryKey: ['user'],
@@ -59,23 +60,26 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
     setUser({ username: data.username });
   }, [queryResponse.data]);
 
-  const authQuery = useCallback(async (path: string, username: string, password: string) => {
-    const response = await fetch(path, {
-      method: 'POST',
-      body: JSON.stringify({ username, password }),
-    });
+  const authQuery = useCallback(
+    async (path: string, username: string, password: string) => {
+      const response = await fetch(path, {
+        method: 'POST',
+        body: JSON.stringify({ username, password }),
+      });
 
-    const responseJson: unknown = await response.json();
-    if (typeof responseJson !== 'object' || responseJson === null) return false;
+      const responseJson: unknown = await response.json();
+      if (typeof responseJson !== 'object' || responseJson === null) return false;
 
-    if (!('token' in responseJson) || !responseJson.token) return false;
-    const responseToken = responseJson.token;
+      if (!('token' in responseJson) || !responseJson.token) return false;
+      const responseToken = responseJson.token;
 
-    if (typeof responseToken !== 'string') return false;
-    setToken(responseToken);
+      if (typeof responseToken !== 'string') return false;
+      setToken(responseToken);
 
-    return true;
-  }, []);
+      return true;
+    },
+    [setToken],
+  );
 
   const login = useCallback(
     async (username: string, password: string) => {

@@ -40,29 +40,34 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
   const [token, setToken] = useLocalStorage<string | null>('token', null);
 
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!token);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!user);
 
   useEffect(() => {
-    setIsAuthenticated(!!token);
-  }, [token]);
+    setIsAuthenticated(!!user);
+  }, [user]);
 
   const queryResponse = useQuery({
     queryKey: ['user'],
     queryFn: async () => {
       if (!token) return null;
 
-      const response = await fetch('/me', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL as string}/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      if (!response.ok) {
+        if (!response.ok) {
+          setToken(null);
+          return null;
+        }
+
+        return (await response.json()) as IUser;
+      } catch (error) {
         setToken(null);
         return null;
       }
-
-      return response.json();
     },
     enabled: !!token,
     refetchInterval: 1000,

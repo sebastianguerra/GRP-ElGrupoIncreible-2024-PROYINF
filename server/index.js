@@ -1,8 +1,13 @@
 import express from 'express';
 import cors from 'cors';
+import bodyParser from 'body-parser';
 
 const app = express();
+
 app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 const port = process.env.PORT ?? 3000;
 
 const users = {};
@@ -17,6 +22,7 @@ app.get('/ping', (req, res) => {
 
 app.post('/register', (req, res) => {
   const { username, password } = req.body;
+  console.log('register', username, password);
   if (users[username]) {
     res.status(400).send('User already exists');
   } else {
@@ -27,8 +33,9 @@ app.post('/register', (req, res) => {
 
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
+  console.log('login', username, password);
   if (users[username] === password) {
-    res.send('Login successful');
+    res.json({ token: 'very real token' });
   } else {
     res.status(401).send('Login failed');
   }
@@ -37,7 +44,7 @@ app.post('/login', (req, res) => {
 app.get('/me', (req, res) => {
   const token = req.headers.authorization;
   console.log(token);
-  if (!token) {
+  if (!token || token !== "Bearer very real token") {
     res.status(401).send('Unauthorized');
     return;
   }

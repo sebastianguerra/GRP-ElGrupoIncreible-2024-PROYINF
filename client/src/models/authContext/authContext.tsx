@@ -8,6 +8,7 @@ import React, {
 } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import useLocalStorage from '../../hooks/useLocalStorage';
+import axios from 'axios';
 
 export interface IUser {
   username: string;
@@ -36,6 +37,7 @@ export const useAuth = () => {
 };
 
 export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
+  const authURL = (import.meta.env.VITE_API_URL as string | undefined) ?? '';
   const [user, setUser] = useState<IUser | null>(null);
 
   const [token, setToken] = useLocalStorage<string | null>('token', null);
@@ -51,55 +53,53 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
     queryFn: async () => {
       if (!token) return null;
 
-      try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL as string}/me`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+      const response = await axios.get(`${authURL}/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data: unknown = response.data;
 
-        if (!response.ok) {
-          setToken(null);
-          return null;
-        }
+      if (typeof data !== 'object' || data === null) return null;
+      if (!('username' in data) || typeof data.username !== 'string') return null;
 
-        return (await response.json()) as IUser;
-      } catch (error) {
-        setToken(null);
-        return null;
-      }
+      const result: IUser = {
+        username: data.username,
+      };
+      return result;
     },
     enabled: !!token,
     refetchInterval: 1000,
   });
 
   useEffect(() => {
-    const data: unknown = queryResponse.data;
-    if (typeof data !== 'object' || data === null) return;
+    if (!queryResponse.data) {
+      setUser(null);
+      return;
+    }
 
-    if (!('username' in data) || typeof data.username !== 'string') return;
-    setUser({ username: data.username });
+    setUser({ username: queryResponse.data.username });
   }, [queryResponse.data]);
 
   const authQuery = useCallback(
     async (path: string, username: string, password: string) => {
-      const response = await fetch(path, {
-        method: 'POST',
-        body: JSON.stringify({ username, password }),
+      const response = await axios.post(`${authURL}${path}`, {
+        username,
+        password,
       });
+      const data: unknown = response.data;
 
-      const responseJson: unknown = await response.json();
-      if (typeof responseJson !== 'object' || responseJson === null) return false;
+      if (typeof data !== 'object' || data === null) return false;
 
-      if (!('token' in responseJson) || !responseJson.token) return false;
-      const responseToken = responseJson.token;
+      if (!('token' in data) || !data.token) return false;
+      const responseToken = data.token;
 
       if (typeof responseToken !== 'string') return false;
       setToken(responseToken);
 
       return true;
     },
-    [setToken],
+    [setToken, authURL],
   );
 
   const login = useCallback(

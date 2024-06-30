@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import useLocalStorage from 'hooks/useLocalStorage';
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 export interface IUser {
   username: string;
@@ -17,6 +17,7 @@ export interface IAuthContext {
   token: string | null;
   user: IUser | null;
   loadingUser: boolean;
+  isAuthenticated: boolean;
   login: (username: string, password: string) => Promise<boolean>;
   register: (username: string, password: string) => Promise<boolean>;
 }
@@ -24,12 +25,26 @@ export interface IAuthContext {
 const AuthContext = createContext<IAuthContext | undefined>(undefined);
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+
+  if (!context) {
+    throw new Error('AuthContext must be used within a AuthProvider');
+  }
+
+  return context;
+};
 
 export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [user, setUser] = useState<IUser | null>(null);
 
   const [token, setToken] = useLocalStorage<string | null>('token', null);
+
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!token);
+
+  useEffect(() => {
+    setIsAuthenticated(!!token);
+  }, [token]);
 
   const queryResponse = useQuery({
     queryKey: ['user'],
@@ -50,6 +65,7 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
       return response.json();
     },
     enabled: !!token,
+    refetchInterval: 1000,
   });
 
   useEffect(() => {
@@ -99,6 +115,7 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
     token,
     user,
     loadingUser: queryResponse.isLoading,
+    isAuthenticated,
     login,
     register,
   };

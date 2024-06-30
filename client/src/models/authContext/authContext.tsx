@@ -43,8 +43,8 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!user);
 
   useEffect(() => {
-    setIsAuthenticated(!!user);
-  }, [user]);
+    setIsAuthenticated(!!user && !!token);
+  }, [user, token]);
 
   const queryResponse = useQuery({
     queryKey: ['user'],

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -51,7 +50,7 @@ const PanelGroup: React.FC<PanelGroupProps> = ({ columns, rows }) => {
 
   return (
     <DropInput
-      onDrop={handleFileChange}
+      onDrop={(files) => void handleFileChange(files)}
       borderColor="black"
       onDragOverColor="blue"
       style={{

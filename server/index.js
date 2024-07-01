@@ -1,8 +1,31 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import passport from 'passport';
+import jwt from 'jsonwebtoken';
 
 import { createUser, findUser, verifyUser } from './database.js';
+
+const SECRET_KEY = 'secret';
+
+const strategyOpts = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: SECRET_KEY,
+};
+
+passport.use(new Strategy(strategyOpts, async (jwtPayload, done) => {
+  try {
+    const username = jwtPayload.username;
+    const user = await findUser(username);
+    if (user) {
+      return done(null, user);
+    }
+    return done("User not found", false);
+  } catch (err) {
+    return done(err);
+  }
+}));
 
 const app = express();
 
@@ -20,37 +43,51 @@ app.get('/ping', (req, res) => {
   res.send('pong');
 });
 
-app.post('/register', (req, res) => {
+app.post('/register', async (req, res) => {
   const { username, password } = req.body;
-  console.log('register', username, password);
-  if (findUser(username)) {
-    res.status(400).send('User already exists');
-  } else {
-    createUser(username, password);
-    res.send('User registered');
-  }
-});
 
-app.post('/login', (req, res) => {
-  const { username, password } = req.body;
-  console.log('login', username, password);
-  if (verifyUser(username, password)) {
-    res.json({ token: 'very real token' });
-  } else {
-    res.status(401).send('Login failed');
-  }
-});
-
-app.get('/me', (req, res) => {
-  const token = req.headers.authorization;
-  console.log(token);
-  if (!token || token !== "Bearer very real token") {
-    res.status(401).send('Unauthorized');
+  if (!username || !password) {
+    res.status(400).send('Invalid username or password');
     return;
   }
-  res.json({
-    username: 'asdf',
-  })
+  if (await findUser(username)) {
+    res.status(400).send('User already exists');
+    return;
+  }
+  await createUser(username, password);
+  const token = jwt.sign({
+    username
+  }, SECRET_KEY, {
+    expiresIn: '1d',
+  });
+  res.status(201).json({ token });
+});
+
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    res.status(400).send('Invalid username or password');
+    return;
+  }
+  if (!(await findUser(username))) {
+    res.status(401).send('Login failed');
+    return;
+  }
+  if (!(await verifyUser(username, password))) {
+    res.status(401).send('Login failed');
+    return;
+  }
+  const token = jwt.sign({
+    username
+  }, SECRET_KEY, {
+    expiresIn: '1d',
+  });
+  res.status(200).json({ token });
+});
+
+app.get('/me', passport.authenticate('jwt', { session: false }), (req, res) => {
+  res.json(req.user);
 });
 
 app.listen(port, () => {

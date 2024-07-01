@@ -19,8 +19,9 @@ export interface IAuthContext {
   user: IUser | null;
   loadingUser: boolean;
   isAuthenticated: boolean;
-  login: (username: string, password: string) => Promise<boolean>;
-  register: (username: string, password: string) => Promise<boolean>;
+  login: (username: string, password: string) => Promise<string | null>;
+  register: (username: string, password: string) => Promise<string | null>;
+  logout: () => void;
 }
 
 const AuthContext = createContext<IAuthContext | undefined>(undefined);
@@ -83,38 +84,74 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
   const authQuery = useCallback(
     async (path: string, username: string, password: string) => {
-      const response = await axios.post(`${authURL}${path}`, {
-        username,
-        password,
-      });
-      const data: unknown = response.data;
+      try {
+        const response = await axios.post(`${authURL}${path}`, {
+          username,
+          password,
+        });
+        if (response.status >= 300 || response.status < 200) {
+          switch (response.status) {
+            case 401:
+              return 'Unauthorized';
+            case 403:
+              return 'Forbidden';
+            case 404:
+              return 'Not Found';
+            case 500:
+              return 'Internal Server Error';
+            default:
+              return 'Unknown Error';
+          }
+        }
+        const data: unknown = response.data;
 
-      if (typeof data !== 'object' || data === null) return false;
+        if (typeof data !== 'object' || data === null) return 'Invalid response';
 
-      if (!('token' in data) || !data.token) return false;
-      const responseToken = data.token;
+        if (!('token' in data) || !data.token) return 'Invalid token';
+        const responseToken = data.token;
 
-      if (typeof responseToken !== 'string') return false;
-      setToken(responseToken);
+        if (typeof responseToken !== 'string') return 'Invalid token type';
+        setToken(responseToken);
 
-      return true;
+        return null;
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          const message = error.message;
+          if (message.includes('401')) {
+            return 'Unauthorized';
+          } else if (message.includes('403')) {
+            return 'Forbidden';
+          } else if (message.includes('404')) {
+            return 'Not Found';
+          }
+          return message;
+        } else if (typeof error === 'string') {
+          return error;
+        } else {
+          return 'Unknown error';
+        }
+      }
     },
     [setToken, authURL],
   );
 
   const login = useCallback(
-    async (username: string, password: string) => {
+    (username: string, password: string) => {
       return authQuery('/login', username, password);
     },
     [authQuery],
   );
 
   const register = useCallback(
-    async (username: string, password: string) => {
+    (username: string, password: string) => {
       return authQuery('/register', username, password);
     },
     [authQuery],
   );
+
+  const logout = useCallback(() => {
+    setToken(null);
+  }, [setToken]);
 
   const exposedValues: IAuthContext = {
     token,
@@ -123,6 +160,7 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
     isAuthenticated,
     login,
     register,
+    logout,
   };
 
   return <AuthContext.Provider value={exposedValues}>{children}</AuthContext.Provider>;

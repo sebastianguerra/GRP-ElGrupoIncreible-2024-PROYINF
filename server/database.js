@@ -13,7 +13,7 @@ const createUser = async (username, password) => {
   if (await findUser(username)) {
     throw new Error('User already exists')
   }
-  db.users.push({ username, password })
+  db.data.users.push({ username, password })
   await db.write()
 }
 

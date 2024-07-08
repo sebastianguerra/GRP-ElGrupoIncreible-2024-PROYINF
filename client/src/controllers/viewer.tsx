@@ -22,7 +22,16 @@ const Viewer = () => {
     >
       <div style={{ display: 'flex', flexDirection: 'row' }}>
         <button onClick={logout}>Cerrar sesión</button>
-        <div style={{ display: 'flex', flexDirection: 'row', padding: '2px' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            padding: '2px',
+            marginLeft: '2px',
+            marginRight: '2px',
+          }}
+        >
+          <span style={{ color: 'white' }}>Columnas:</span>
           <button
             onClick={() => {
               setColumns(columns - 1);
@@ -36,6 +45,7 @@ const Viewer = () => {
             onChange={(e) => {
               setColumns(parseInt(e.target.value, 10));
             }}
+            style={{ width: '40px' }}
           />
           <button
             onClick={() => {
@@ -45,7 +55,16 @@ const Viewer = () => {
             +
           </button>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'row', padding: '2px' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            padding: '2px',
+            marginLeft: '2px',
+            marginRight: '2px',
+          }}
+        >
+          <span style={{ color: 'white' }}>Filas:</span>
           <button
             onClick={() => {
               setRows(rows - 1);
@@ -59,6 +78,7 @@ const Viewer = () => {
             onChange={(e) => {
               setRows(parseInt(e.target.value, 10));
             }}
+            style={{ width: '40px' }}
           />
           <button
             onClick={() => {

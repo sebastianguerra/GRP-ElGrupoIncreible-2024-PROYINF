@@ -84,6 +84,11 @@ const PanelGroup: React.FC<PanelGroupProps> = ({ columns, rows }) => {
     >
       <div style={{ display: 'flex', flexDirection: 'row' }}>
         <Select
+          value={
+            selectedImageSet
+              ? { value: selectedImageSet, label: selectedImageSet.toString() }
+              : null
+          }
           styles={{
             container: (provided) => ({
               ...provided,

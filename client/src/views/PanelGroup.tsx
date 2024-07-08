@@ -50,6 +50,7 @@ const PanelGroup: React.FC<PanelGroupProps> = ({ columns, rows }) => {
 
   return (
     <DropInput
+      key={columns * rows}
       onDrop={(files) => void handleFileChange(files)}
       borderColor="black"
       onDragOverColor="blue"

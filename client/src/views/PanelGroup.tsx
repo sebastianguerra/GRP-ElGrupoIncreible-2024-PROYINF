@@ -56,7 +56,16 @@ const PanelGroup: React.FC<PanelGroupProps> = ({ columns, rows }) => {
         } else {
           return {
             ...prev,
-            [imgSet]: [...prev[imgSet], { imageId, instanceNumber: imgId }],
+            [imgSet]: [...prev[imgSet], { imageId, instanceNumber: imgId }].reduce<
+              { imageId: string; instanceNumber: number }[]
+            >((acc, cur) => {
+              const instances = acc.map((img) => img.instanceNumber);
+              if (instances.includes(cur.instanceNumber)) {
+                return acc;
+              } else {
+                return [...acc, cur].sort((a, b) => a.instanceNumber - b.instanceNumber);
+              }
+            }, []),
           };
         }
       });

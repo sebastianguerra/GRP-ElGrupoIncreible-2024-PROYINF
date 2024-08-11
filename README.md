@@ -1,18 +1,18 @@
-# Grupo 03
+# El Grupo Increible
 
-Este es el repositorio del *Grupo 03*, cuyos integrantes son:
+Este es el repositorio del grupo *El grupo increible*, cuyos integrantes son:
 
 * Sebastián Guerra - 202173563-1
-* Nelson Sepúlveda - 202004610-7
-* Vicente Henríquez - 202051507-7
-* Francisco Domínguez - 202104520-1
-* **Tutor**: Felipe Marquz
+* Romina Aguilera - 202173572-0
+* 
+* 
+* **Tutor**: *Nombre del tutor*
 
 ## Wiki
 
 > Obtener enlace desde el home de la wiki del repo.
 
-Puede acceder a la Wiki mediante el siguiente [enlace](https://github.com/sebastianguerra/GRP-03-2024-PROYINF/wiki)
+Puede acceder a la Wiki mediante el siguiente [enlace](https://github.com/sebastianguerra/GRP-ElGrupoIncreible-2024-PROYINF/wiki)
 `
 
 ## Videos

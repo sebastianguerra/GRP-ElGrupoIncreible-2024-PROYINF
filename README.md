@@ -5,7 +5,7 @@ Este es el repositorio del grupo *El grupo increible*, cuyos integrantes son:
 * Sebastián Guerra - 202173563-1
 * Romina Aguilera - 202173572-0
 * Flavio Oyarce - 202173617-4
-* 
+* Diego Ramírez - 202073534-4
 * **Tutor**: *Nombre del tutor*
 
 ## Wiki

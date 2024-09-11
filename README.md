@@ -6,7 +6,7 @@ Este es el repositorio del grupo *El grupo increible*, cuyos integrantes son:
 * Romina Aguilera - 202173572-0
 * Flavio Oyarce - 202173617-4
 * Diego Ramírez - 202073534-4
-* **Tutor**: *Nombre del tutor*
+* **Tutor**: *Eduardo Mendoza*
 
 ## Wiki
 
@@ -26,3 +26,7 @@ Puede acceder a la Wiki mediante el siguiente [enlace](https://github.com/sebast
 ## Aspectos técnicos relevantes
 
 *Todo aspecto relevante cuando para poder usar el proyecto o consideraciones del proyecto base a ser entregado* **TODO**
+
+* Continuaremos desarrollando en este repositorio pero basándonos en [el del semestre pasado](https://github.com/sebastianguerra/GRP-03-2024-PROYINF)
+
+* Ya que tenemos implementada la funcionalidad para ver imágenes en 3 direcciones ortogonales, para este semestre queremos agregar la funcionalidad de mostrar información de las etiquetas DICOM e incorporar un buscador para las mismas.

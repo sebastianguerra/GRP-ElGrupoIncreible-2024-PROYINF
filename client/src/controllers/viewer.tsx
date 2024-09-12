@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PanelGroup from '../views/PanelGroup';
-import { useAuth } from '@models/authContext/authContext';
+import { useAuth } from '../models/authContext/authContext';
 
 const Viewer = () => {
   const { logout } = useAuth();

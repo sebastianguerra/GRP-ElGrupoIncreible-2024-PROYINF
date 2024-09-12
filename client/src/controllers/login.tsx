@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useAuth } from '@models/authContext/authContext';
+import { useAuth } from '../models/authContext/authContext';
 
 const Viewer = () => {
   const { login, register } = useAuth();

@@ -4,7 +4,7 @@ import cornerstone from 'cornerstone-core';
 import dicomParser from 'dicom-parser';
 import cornerstoneWADOImageLoader from 'cornerstone-wado-image-loader';
 
-import DropInput from '../components/DropInput';
+import DropInput from '../ui/DropInput';
 
 import Panel from './Panel';
 

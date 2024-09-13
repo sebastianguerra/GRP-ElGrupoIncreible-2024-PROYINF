@@ -57,9 +57,7 @@ app.post('/register', async (req, res) => {
   await createUser(username, password);
   const token = jwt.sign({
     username
-  }, SECRET_KEY, {
-    expiresIn: '1d',
-  });
+  }, SECRET_KEY);
   res.status(201).json({ token });
 });
 
@@ -80,9 +78,7 @@ app.post('/login', async (req, res) => {
   }
   const token = jwt.sign({
     username
-  }, SECRET_KEY, {
-    expiresIn: '1d',
-  });
+  }, SECRET_KEY);
   res.status(200).json({ token });
 });
 

@@ -3,7 +3,7 @@ import Viewer from './viewer';
 import Login from './login';
 import { useAuth } from '../contexts/authContext';
 
-const RouterBuilder = () => {
+function RouterBuilder() {
   const { isAuthenticated } = useAuth();
 
   return (
@@ -15,6 +15,6 @@ const RouterBuilder = () => {
       </Routes>
     </BrowserRouter>
   );
-};
+}
 
 export default RouterBuilder;

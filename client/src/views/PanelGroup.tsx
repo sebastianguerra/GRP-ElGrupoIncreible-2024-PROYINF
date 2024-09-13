@@ -13,7 +13,7 @@ interface PanelGroupProps {
   rows: number;
 }
 
-const PanelGroup: React.FC<PanelGroupProps> = ({ columns, rows }) => {
+function PanelGroup({ columns, rows }: PanelGroupProps) {
   useEffect(() => {
     cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
     cornerstoneWADOImageLoader.external.dicomParser = dicomParser;
@@ -148,6 +148,6 @@ const PanelGroup: React.FC<PanelGroupProps> = ({ columns, rows }) => {
       </DropInput>
     </div>
   );
-};
+}
 
 export default PanelGroup;

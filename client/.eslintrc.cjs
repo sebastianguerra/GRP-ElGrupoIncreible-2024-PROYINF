@@ -13,7 +13,15 @@ module.exports = {
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs', 'vite.config.ts'],
   parser: '@typescript-eslint/parser',
-  plugins: ['react-refresh', '@typescript-eslint', 'import', 'react', 'react-hooks', 'prettier'],
+  plugins: [
+    'react-refresh',
+    '@typescript-eslint',
+    'import',
+    'react',
+    'react-hooks',
+    'prettier',
+    'unused-imports',
+  ],
   parserOptions: {
     project: ['./tsconfig.json', './tsconfig.node.json'],
     tsconfigRootDir: __dirname,
@@ -22,8 +30,9 @@ module.exports = {
     'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     'react/function-component-definition': [
       'error',
-      { namedComponents: 'arrow-function', unnamedComponents: 'arrow-function' },
+      { unnamedComponents: 'arrow-function' },
     ],
+    'unused-imports/no-unused-imports': 2,
   },
   settings: {
     react: {

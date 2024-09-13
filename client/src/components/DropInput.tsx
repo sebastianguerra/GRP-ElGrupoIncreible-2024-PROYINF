@@ -7,7 +7,7 @@ interface DropInputProps extends PropsWithChildren {
   style?: React.CSSProperties;
 }
 
-const DropInput: React.FC<DropInputProps> = (props) => {
+function DropInput(props: DropInputProps) {
   const elementRef = useRef<HTMLDivElement>(null);
 
   const { children, onDrop, onDragOverColor, borderColor: propsBorderColor, style = {} } = props;
@@ -66,6 +66,6 @@ const DropInput: React.FC<DropInputProps> = (props) => {
       {children}
     </div>
   );
-};
+}
 
 export default DropInput;

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import PanelGroup from '../views/PanelGroup';
 import { useAuth } from '../contexts/authContext';
 
-const Viewer = () => {
+function Viewer() {
   const { logout } = useAuth();
   const [columns, setColumns] = useState(2);
   const [rows, setRows] = useState(2);
@@ -94,6 +94,6 @@ const Viewer = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Viewer;

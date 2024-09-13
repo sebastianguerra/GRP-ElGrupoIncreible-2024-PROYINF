@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/authContext';
 
-const Viewer = () => {
+function Viewer() {
   const { login, register } = useAuth();
 
   const [username, setUsername] = useState('');
@@ -41,6 +41,6 @@ const Viewer = () => {
       {error && <p>{error}</p>}
     </div>
   );
-};
+}
 
 export default Viewer;

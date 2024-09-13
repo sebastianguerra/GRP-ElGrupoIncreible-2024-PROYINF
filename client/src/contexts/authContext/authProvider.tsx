@@ -1,10 +1,10 @@
-import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
+import { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import axios from 'axios';
 import AuthContext, { IAuthContext, IUser } from './authContext';
 
-const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
+function AuthProvider({ children }: PropsWithChildren) {
   const authURL = (import.meta.env.VITE_API_URL as string | undefined) ?? '';
   const [user, setUser] = useState<IUser | null>(null);
 
@@ -131,6 +131,6 @@ const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
   };
 
   return <AuthContext.Provider value={exposedValues}>{children}</AuthContext.Provider>;
-};
+}
 
 export default AuthProvider;

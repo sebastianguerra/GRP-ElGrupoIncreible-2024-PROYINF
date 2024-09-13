@@ -1,7 +1,7 @@
-import React, { PropsWithChildren, useState } from 'react';
+import { PropsWithChildren, useState } from 'react';
 import ExampleStoreContext from './example_store_context';
 
-const ExampleStoreProvider: React.FC<PropsWithChildren> = ({ children }) => {
+function ExampleStoreProvider({ children }: PropsWithChildren) {
   const [number, setNumber] = useState(0);
 
   const addOne = () => {
@@ -13,6 +13,6 @@ const ExampleStoreProvider: React.FC<PropsWithChildren> = ({ children }) => {
       {children}
     </ExampleStoreContext.Provider>
   );
-};
+}
 
 export default ExampleStoreProvider;

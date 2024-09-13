@@ -3,7 +3,7 @@ import React, { PropsWithChildren } from 'react';
 import { ExampleStoreProvider } from './example_store';
 import { AuthProvider } from './authContext';
 
-const ContextsProvider: React.FC<PropsWithChildren> = ({ children }) => {
+const ContextsProviders: React.FC<PropsWithChildren> = ({ children }) => {
   const providers = [ExampleStoreProvider, AuthProvider];
 
   return providers.reduce((acc, Provider) => {
@@ -11,4 +11,4 @@ const ContextsProvider: React.FC<PropsWithChildren> = ({ children }) => {
   }, children);
 };
 
-export default ContextsProvider;
+export default ContextsProviders;

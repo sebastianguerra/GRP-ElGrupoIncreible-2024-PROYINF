@@ -23,7 +23,7 @@ module.exports = {
     'unused-imports',
   ],
   parserOptions: {
-    project: ['./tsconfig.json', './tsconfig.node.json'],
+    project: ['./tsconfig.app.json'],
     tsconfigRootDir: __dirname,
   },
   rules: {

@@ -29,22 +29,35 @@ module.exports = {
   },
   rules: {
     'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-    'react/function-component-definition': [
-      'error',
-      { unnamedComponents: 'arrow-function' },
-    ],
+    'react/function-component-definition': ['error', { unnamedComponents: 'arrow-function' }],
     'sort-imports': ['error', { ignoreDeclarationSort: true, ignoreCase: true }],
     'import/order': [
       'error',
       {
         'newlines-between': 'always',
+        pathGroups: [
+          {
+            pattern: '@/**',
+            group: 'internal',
+            position: 'before',
+          },
+        ],
+        distinctGroup: true,
         groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+        alphabetize: {
+          order: 'asc',
+          caseInsensitive: true,
+        },
       },
     ],
-    'eqeqeq': ['error', 'always'],
+    eqeqeq: ['error', 'always'],
     'no-else-return': ['error', { allowElseIf: false }],
-    'yoda': ['error', 'never', { exceptRange: false }],
-    'capitalized-comments': ['error', 'always', { ignoreConsecutiveComments: true }],
+    yoda: ['error', 'never', { exceptRange: false }],
+    'capitalized-comments': [
+      'error',
+      'always',
+      { ignoreConsecutiveComments: true, ignoreInlineComments: true },
+    ],
     'eol-last': ['error', 'always'],
     'unused-imports/no-unused-imports': 2,
     'import/no-unresolved': 'error',
@@ -53,7 +66,7 @@ module.exports = {
       {
         alias: {
           '@': './src',
-        }
+        },
       },
     ],
   },

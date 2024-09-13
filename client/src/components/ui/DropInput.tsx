@@ -1,17 +1,22 @@
-import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import { Box, BoxProps } from '@chakra-ui/react';
+import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
 
-interface DropInputProps extends PropsWithChildren {
+interface DropInputProps extends Omit<BoxProps, 'onDrop'> {
   onDragOverColor?: string;
   borderColor?: string;
   onDrop: (files: FileList) => void;
-  style?: React.CSSProperties;
 }
 
-function DropInput(props: DropInputProps) {
-  const elementRef = useRef<HTMLDivElement>(null);
+const DropInput = React.forwardRef(function DropInput(
+  props: DropInputProps,
+  forwardedRef: React.Ref<HTMLDivElement | null>,
+) {
+  const { children, onDrop, onDragOverColor, borderColor: propsBorderColor, ...rest } = props;
 
-  const { children, onDrop, onDragOverColor, borderColor: propsBorderColor, style = {} } = props;
-  const [element, setElement] = useState<HTMLDivElement | null>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
+  useImperativeHandle(forwardedRef, () => ref.current);
+
+  const element: HTMLDivElement | null = ref.current;
 
   const [isDragOver, setIsDragOver] = useState(false);
   const [borderColor, setBorderColor] = useState(propsBorderColor);
@@ -19,10 +24,6 @@ function DropInput(props: DropInputProps) {
   useEffect(() => {
     setBorderColor(isDragOver ? onDragOverColor : propsBorderColor);
   }, [propsBorderColor, onDragOverColor, isDragOver]);
-
-  useEffect(() => {
-    setElement(elementRef.current);
-  }, [elementRef]);
 
   useEffect(() => {
     if (element) {
@@ -59,13 +60,10 @@ function DropInput(props: DropInputProps) {
   }, [element, onDrop]);
 
   return (
-    <div
-      ref={elementRef}
-      style={{ borderWidth: '3px', borderStyle: 'solid', ...style, borderColor }}
-    >
+    <Box ref={ref} borderWidth="3px" borderStyle="solid" {...rest} borderColor={borderColor}>
       {children}
-    </div>
+    </Box>
   );
-}
+});
 
 export default DropInput;

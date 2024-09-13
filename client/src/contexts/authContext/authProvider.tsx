@@ -1,5 +1,5 @@
-import { PropsWithChildren, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { PropsWithChildren, useCallback } from 'react';
 
 import useLocalStorage from '@/hooks/useLocalStorage';
 import AuthService from '@/services/AuthService';

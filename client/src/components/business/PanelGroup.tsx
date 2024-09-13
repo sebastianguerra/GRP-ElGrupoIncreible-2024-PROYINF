@@ -1,8 +1,9 @@
+import { Button, Grid, GridItem, HStack, Input, VStack } from '@chakra-ui/react';
+import cornerstone from 'cornerstone-core';
+import cornerstoneWADOImageLoader from 'cornerstone-wado-image-loader';
+import dicomParser from 'dicom-parser';
 import React, { useEffect } from 'react';
 import Select from 'react-select';
-import cornerstone from 'cornerstone-core';
-import dicomParser from 'dicom-parser';
-import cornerstoneWADOImageLoader from 'cornerstone-wado-image-loader';
 
 import DropInput from '@/components/ui/DropInput';
 
@@ -68,16 +69,11 @@ function PanelGroup({ columns, rows }: PanelGroupProps) {
     }
   };
 
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
   return (
-    <div
-      style={{
-        height: '100%',
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
+    <VStack h="full" w="full" alignItems="stretch">
+      <HStack>
         <Select
           value={
             selectedImageSet
@@ -100,51 +96,58 @@ function PanelGroup({ columns, rows }: PanelGroupProps) {
             setSelectedImageSet(selected?.value ?? null);
           }}
         />
-        <input
+        <Input
+          ref={fileInputRef}
+          display="none"
           type="file"
           multiple
           onChange={(e) => e.target.files && void handleFileChange(e.target.files)}
         />
-      </div>
+        <Button
+          onClick={() => {
+            if (fileInputRef.current) {
+              fileInputRef.current.click();
+            }
+          }}
+        >
+          Add files
+        </Button>
+      </HStack>
       <DropInput
         key={columns * rows}
         onDrop={(files) => void handleFileChange(files)}
         borderColor="black"
         onDragOverColor="blue"
-        style={{
-          height: '90%',
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'row',
-        }}
+        h="90%"
+        w="full"
+        as={HStack}
       >
-        <div
-          style={{
-            display: 'grid',
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'black',
-            gridTemplateColumns: `repeat(${columns.toString()}, 1fr)`,
-            gridTemplateRows: `repeat(${rows.toString()}, 1fr)`,
-          }}
+        <Grid
+          w="full"
+          h="full"
+          bgColor="black"
+          templateColumns={`repeat(${columns.toString()}, 1fr)`}
+          templateRows={`repeat(${rows.toString()}, 1fr)`}
         >
-          {Array.from({ length: columns * rows }).map((_, i) => (
-            <Panel
-              key={i}
-              imageIds={selectedImageSet ? imgs[selectedImageSet].map((img) => img.imageId) : []}
-              style={{
-                width: '100%',
-                height: '100%',
-                backgroundColor: 'darkgray',
-                borderWidth: '1px',
-                borderStyle: 'solid',
-                borderRadius: '5px',
-              }}
-            />
-          ))}
-        </div>
+          {Array.from({ length: columns * rows })
+            .map((_, i) => (
+              <Panel
+                key={i}
+                imageIds={selectedImageSet ? imgs[selectedImageSet].map((img) => img.imageId) : []}
+                w="full"
+                h="full"
+                bgColor="darkgray"
+                borderWidth="1px"
+                borderStyle="solid"
+                borderRadius="5px"
+              />
+            ))
+            .map((panel, i) => (
+              <GridItem key={i}>{panel}</GridItem>
+            ))}
+        </Grid>
       </DropInput>
-    </div>
+    </VStack>
   );
 }
 

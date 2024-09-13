@@ -1,15 +1,15 @@
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { Box, BoxProps } from '@chakra-ui/react';
 import cornerstone from 'cornerstone-core';
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
 import { useWindowSize } from '@/hooks/useWindowSize';
 
-interface PanelProps {
+interface PanelProps extends BoxProps {
   imageIds: string[];
-  style?: React.CSSProperties;
 }
 
 const Panel = forwardRef<HTMLDivElement, PanelProps>(function Panel(
-  { imageIds, style = {} },
+  { imageIds, ...rest },
   outerRef,
 ) {
   const panelRef = useRef<HTMLDivElement>(null);
@@ -79,7 +79,7 @@ const Panel = forwardRef<HTMLDivElement, PanelProps>(function Panel(
     };
   }, [panel, handleScroll]);
 
-  return <div ref={panelRef} style={style} />;
+  return <Box {...rest} ref={panelRef} />;
 });
 
 export default Panel;

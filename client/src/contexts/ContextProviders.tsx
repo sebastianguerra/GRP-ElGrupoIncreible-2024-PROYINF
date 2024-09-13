@@ -4,7 +4,7 @@ import QueryClientProvider from './QueryClientProvider';
 import { ExampleStoreProvider } from './example_store';
 import { AuthProvider } from './authContext';
 
-const ContextsProviders: React.FC<PropsWithChildren> = ({ children }) => {
+const ContextProviders: React.FC<PropsWithChildren> = ({ children }) => {
   const providers = [QueryClientProvider, ExampleStoreProvider, AuthProvider];
 
   return providers.reduceRight((acc, Provider) => {
@@ -12,4 +12,4 @@ const ContextsProviders: React.FC<PropsWithChildren> = ({ children }) => {
   }, children);
 };
 
-export default ContextsProviders;
+export default ContextProviders;

@@ -10,6 +10,7 @@ module.exports = {
     'plugin:@typescript-eslint/strict-type-checked',
     'airbnb-typescript',
     'plugin:prettier/recommended',
+    'plugin:@dword-design/import-alias/recommended',
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs', 'vite.config.ts'],
   parser: '@typescript-eslint/parser',
@@ -47,6 +48,14 @@ module.exports = {
     'eol-last': ['error', 'always'],
     'unused-imports/no-unused-imports': 2,
     'import/no-unresolved': 'error',
+    '@dword-design/import-alias/prefer-alias': [
+      'error',
+      {
+        alias: {
+          '@': './src',
+        }
+      },
+    ],
   },
   settings: {
     react: {

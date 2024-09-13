@@ -24,6 +24,7 @@
     "ts-results": "^3.3.0"
   },
   "devDependencies": {
+    "@dword-design/eslint-plugin-import-alias": "^5.1.1",
     "@eslint/js": "^9.2.0",
     "@types/cornerstone-core": "^2.3.3",
     "@types/react": "^18.2.66",

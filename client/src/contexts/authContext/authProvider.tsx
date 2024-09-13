@@ -1,43 +1,10 @@
-import React, {
-  createContext,
-  useContext,
-  PropsWithChildren,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import axios from 'axios';
+import AuthContext, { IAuthContext, IUser } from './authContext';
 
-export interface IUser {
-  username: string;
-}
-
-export interface IAuthContext {
-  token: string | null;
-  user: IUser | null;
-  loadingUser: boolean;
-  isAuthenticated: boolean;
-  login: (username: string, password: string) => Promise<string | null>;
-  register: (username: string, password: string) => Promise<string | null>;
-  logout: () => void;
-}
-
-const AuthContext = createContext<IAuthContext | undefined>(undefined);
-
-// eslint-disable-next-line react-refresh/only-export-components
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-
-  if (!context) {
-    throw new Error('AuthContext must be used within a AuthProvider');
-  }
-
-  return context;
-};
-
-export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
+const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const authURL = (import.meta.env.VITE_API_URL as string | undefined) ?? '';
   const [user, setUser] = useState<IUser | null>(null);
 
@@ -165,3 +132,5 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
   return <AuthContext.Provider value={exposedValues}>{children}</AuthContext.Provider>;
 };
+
+export default AuthProvider;

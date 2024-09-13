@@ -1,16 +1,15 @@
 import { createContext } from 'react';
+import { Result } from 'ts-results';
 
-export interface IUser {
-  username: string;
-}
+import { IUser } from '../../services/AuthService';
 
 export interface IAuthContext {
   token: string | null;
   user: IUser | null;
   loadingUser: boolean;
   isAuthenticated: boolean;
-  login: (username: string, password: string) => Promise<string | null>;
-  register: (username: string, password: string) => Promise<string | null>;
+  login: (username: string, password: string) => Promise<Result<string, string>>;
+  register: (username: string, password: string) => Promise<Result<string, string>>;
   logout: () => void;
 }
 

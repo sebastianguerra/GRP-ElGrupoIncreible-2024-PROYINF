@@ -1,13 +1,12 @@
 import { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
 
 import useLocalStorage from '../../hooks/useLocalStorage';
+import AuthService, { IUser } from '../../services/AuthService';
 
-import AuthContext, { IAuthContext, IUser } from './authContext';
+import AuthContext, { IAuthContext } from './authContext';
 
 function AuthProvider({ children }: PropsWithChildren) {
-  const authURL = (import.meta.env.VITE_API_URL as string | undefined) ?? '';
   const [user, setUser] = useState<IUser | null>(null);
 
   const [token, setToken] = useLocalStorage<string | null>('token', null);
@@ -20,24 +19,7 @@ function AuthProvider({ children }: PropsWithChildren) {
 
   const queryResponse = useQuery({
     queryKey: ['user'],
-    queryFn: async () => {
-      if (!token) return null;
-
-      const response = await axios.get(`${authURL}/me`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data: unknown = response.data;
-
-      if (typeof data !== 'object' || data === null) return null;
-      if (!('username' in data) || typeof data.username !== 'string') return null;
-
-      const result: IUser = {
-        username: data.username,
-      };
-      return result;
-    },
+    queryFn: () => AuthService.me(token).then((r) => r.unwrapOr(null)),
     enabled: !!token,
     refetchInterval: 1000,
   });
@@ -51,73 +33,22 @@ function AuthProvider({ children }: PropsWithChildren) {
     setUser({ username: queryResponse.data.username });
   }, [queryResponse.data]);
 
-  const authQuery = useCallback(
-    async (path: string, username: string, password: string) => {
-      try {
-        const response = await axios.post(`${authURL}${path}`, {
-          username,
-          password,
-        });
-        if (response.status >= 300 || response.status < 200) {
-          switch (response.status) {
-            case 401:
-              return 'Unauthorized';
-            case 403:
-              return 'Forbidden';
-            case 404:
-              return 'Not Found';
-            case 500:
-              return 'Internal Server Error';
-            default:
-              return 'Unknown Error';
-          }
-        }
-        const data: unknown = response.data;
-
-        if (typeof data !== 'object' || data === null) return 'Invalid response';
-
-        if (!('token' in data) || !data.token) return 'Invalid token';
-        const responseToken = data.token;
-
-        if (typeof responseToken !== 'string') return 'Invalid token type';
-        setToken(responseToken);
-
-        return null;
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          const message = error.message;
-          if (message.includes('401')) {
-            return 'Unauthorized';
-          }
-          if (message.includes('403')) {
-            return 'Forbidden';
-          }
-          if (message.includes('404')) {
-            return 'Not Found';
-          }
-          return message;
-        }
-        if (typeof error === 'string') {
-          return error;
-        }
-        return 'Unknown error';
-      }
-    },
-    [setToken, authURL],
-  );
-
   const login = useCallback(
-    (username: string, password: string) => {
-      return authQuery('/login', username, password);
-    },
-    [authQuery],
+    (username: string, password: string) =>
+      AuthService.login(username, password).then((t) => {
+        setToken(t.unwrapOr(null));
+        return t;
+      }),
+    [setToken],
   );
 
   const register = useCallback(
-    (username: string, password: string) => {
-      return authQuery('/register', username, password);
-    },
-    [authQuery],
+    (username: string, password: string) =>
+      AuthService.register(username, password).then((t) => {
+        setToken(t.unwrapOr(null));
+        return t;
+      }),
+    [setToken],
   );
 
   const logout = useCallback(() => {

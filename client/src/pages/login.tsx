@@ -11,11 +11,11 @@ function Viewer() {
 
   const handleLogin = async () => {
     const res = await login(username, password);
-    if (res) setError(res);
+    setError(res.ok ? null : res.val);
   };
   const handleRegister = async () => {
     const res = await register(username, password);
-    if (res) setError(res);
+    setError(res.ok ? null : res.val);
   };
 
   return (

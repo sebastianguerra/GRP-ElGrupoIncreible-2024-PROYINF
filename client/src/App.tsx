@@ -1,7 +1,21 @@
-import RouterBuilder from './controllers/routes_builder';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+
+import { useAuth } from './contexts/authContext';
+import Viewer from './controllers/viewer';
+import Login from './controllers/login';
 
 function App() {
-  return <RouterBuilder />;
+  const { isAuthenticated } = useAuth();
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <Login />} />
+        <Route path="/viewer" element={isAuthenticated ? <Viewer /> : <Navigate to="/login" />} />
+        <Route path="*" element={<Navigate to="/viewer" />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;

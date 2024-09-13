@@ -1,12 +1,13 @@
 import React, { PropsWithChildren } from 'react';
 
+import QueryClientProvider from './QueryClientProvider';
 import { ExampleStoreProvider } from './example_store';
 import { AuthProvider } from './authContext';
 
 const ContextsProviders: React.FC<PropsWithChildren> = ({ children }) => {
-  const providers = [ExampleStoreProvider, AuthProvider];
+  const providers = [QueryClientProvider, ExampleStoreProvider, AuthProvider];
 
-  return providers.reduce((acc, Provider) => {
+  return providers.reduceRight((acc, Provider) => {
     return <Provider>{acc}</Provider>;
   }, children);
 };

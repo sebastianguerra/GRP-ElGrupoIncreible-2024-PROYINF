@@ -46,10 +46,20 @@ module.exports = {
     'capitalized-comments': ['error', 'always', { ignoreConsecutiveComments: true }],
     'eol-last': ['error', 'always'],
     'unused-imports/no-unused-imports': 2,
+    'import/no-unresolved': 'error',
   },
   settings: {
     react: {
       version: 'detect',
+    },
+    'import/parsers': {
+      '@typescript-eslint/parser': ['.ts', '.tsx'],
+    },
+    'import/resolver': {
+      typescript: {
+        alwaysTryTypes: true,
+        project: './tsconfig.app.json',
+      },
     },
   },
 };

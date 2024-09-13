@@ -1,7 +1,7 @@
 import { createContext } from 'react';
 import { Result } from 'ts-results';
 
-import { IUser } from '../../services/AuthService';
+import { IUser } from '@/services/AuthService';
 
 export interface IAuthContext {
   token: string | null;

@@ -1,37 +1,20 @@
-import { PropsWithChildren, useCallback, useEffect, useState } from 'react';
+import { PropsWithChildren, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 import useLocalStorage from '../../hooks/useLocalStorage';
-import AuthService, { IUser } from '../../services/AuthService';
+import AuthService from '../../services/AuthService';
 
 import AuthContext, { IAuthContext } from './authContext';
 
 function AuthProvider({ children }: PropsWithChildren) {
-  const [user, setUser] = useState<IUser | null>(null);
-
   const [token, setToken] = useLocalStorage<string | null>('token', null);
 
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!user);
-
-  useEffect(() => {
-    setIsAuthenticated(!!user && !!token);
-  }, [user, token]);
-
-  const queryResponse = useQuery({
+  const { data: user, isLoading: loadingUser } = useQuery({
     queryKey: ['user'],
-    queryFn: () => AuthService.me(token).then((r) => r.unwrapOr(null)),
+    queryFn: () => AuthService.me(token).then((r) => r.unwrapOr(undefined)),
     enabled: !!token,
     refetchInterval: 1000,
   });
-
-  useEffect(() => {
-    if (!queryResponse.data) {
-      setUser(null);
-      return;
-    }
-
-    setUser({ username: queryResponse.data.username });
-  }, [queryResponse.data]);
 
   const login = useCallback(
     (username: string, password: string) =>
@@ -57,9 +40,9 @@ function AuthProvider({ children }: PropsWithChildren) {
 
   const exposedValues: IAuthContext = {
     token,
-    user,
-    loadingUser: queryResponse.isLoading,
-    isAuthenticated,
+    user: user,
+    loadingUser,
+    isAuthenticated: !!user && !!token,
     login,
     register,
     logout,

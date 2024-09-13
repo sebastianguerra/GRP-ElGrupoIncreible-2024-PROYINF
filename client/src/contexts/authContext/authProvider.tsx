@@ -1,7 +1,9 @@
 import { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import useLocalStorage from '../../hooks/useLocalStorage';
 import axios from 'axios';
+
+import useLocalStorage from '../../hooks/useLocalStorage';
+
 import AuthContext, { IAuthContext, IUser } from './authContext';
 
 function AuthProvider({ children }: PropsWithChildren) {
@@ -86,17 +88,19 @@ function AuthProvider({ children }: PropsWithChildren) {
           const message = error.message;
           if (message.includes('401')) {
             return 'Unauthorized';
-          } else if (message.includes('403')) {
+          }
+          if (message.includes('403')) {
             return 'Forbidden';
-          } else if (message.includes('404')) {
+          }
+          if (message.includes('404')) {
             return 'Not Found';
           }
           return message;
-        } else if (typeof error === 'string') {
-          return error;
-        } else {
-          return 'Unknown error';
         }
+        if (typeof error === 'string') {
+          return error;
+        }
+        return 'Unknown error';
       }
     },
     [setToken, authURL],

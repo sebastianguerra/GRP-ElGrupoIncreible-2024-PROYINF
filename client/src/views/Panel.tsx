@@ -1,6 +1,7 @@
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import cornerstone from 'cornerstone-core';
+
 import { useWindowSize } from '../hooks/useWindowSize';
-import { useEffect, useState, forwardRef, useRef, useImperativeHandle, useCallback } from 'react';
 
 interface PanelProps {
   imageIds: string[];

@@ -32,6 +32,19 @@ module.exports = {
       'error',
       { unnamedComponents: 'arrow-function' },
     ],
+    'sort-imports': ['error', { ignoreDeclarationSort: true, ignoreCase: true }],
+    'import/order': [
+      'error',
+      {
+        'newlines-between': 'always',
+        groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+      },
+    ],
+    'eqeqeq': ['error', 'always'],
+    'no-else-return': ['error', { allowElseIf: false }],
+    'yoda': ['error', 'never', { exceptRange: false }],
+    'capitalized-comments': ['error', 'always', { ignoreConsecutiveComments: true }],
+    'eol-last': ['error', 'always'],
     'unused-imports/no-unused-imports': 2,
   },
   settings: {

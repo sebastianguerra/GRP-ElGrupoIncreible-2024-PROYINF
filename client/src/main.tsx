@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
-import './reset.css';
 
+import './reset.css';
+import App from './App';
 import Providers from './contexts/ContextProviders';
 
 const rootElement = document.getElementById('root');

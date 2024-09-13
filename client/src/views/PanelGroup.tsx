@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-
 import Select from 'react-select';
 import cornerstone from 'cornerstone-core';
 import dicomParser from 'dicom-parser';
 import cornerstoneWADOImageLoader from 'cornerstone-wado-image-loader';
 
 import DropInput from '../components/DropInput';
+
 import Panel from './Panel';
 
 interface PanelGroupProps {
@@ -50,21 +50,19 @@ function PanelGroup({ columns, rows }: PanelGroupProps) {
             ...prev,
             [imgSet]: [{ imageId, instanceNumber: imgId }],
           };
-        } else {
-          return {
-            ...prev,
-            [imgSet]: [...prev[imgSet], { imageId, instanceNumber: imgId }].reduce<
-              { imageId: string; instanceNumber: number }[]
-            >((acc, cur) => {
-              const instances = acc.map((img) => img.instanceNumber);
-              if (instances.includes(cur.instanceNumber)) {
-                return acc;
-              } else {
-                return [...acc, cur].sort((a, b) => a.instanceNumber - b.instanceNumber);
-              }
-            }, []),
-          };
         }
+        return {
+          ...prev,
+          [imgSet]: [...prev[imgSet], { imageId, instanceNumber: imgId }].reduce<
+            { imageId: string; instanceNumber: number }[]
+          >((acc, cur) => {
+            const instances = acc.map((img) => img.instanceNumber);
+            if (instances.includes(cur.instanceNumber)) {
+              return acc;
+            }
+            return [...acc, cur].sort((a, b) => a.instanceNumber - b.instanceNumber);
+          }, []),
+        };
       });
       setSelectedImageSet(imgSet);
     }

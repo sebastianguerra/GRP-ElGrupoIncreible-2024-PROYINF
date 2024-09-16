@@ -1,83 +1,64 @@
 import { Box, BoxProps } from '@chakra-ui/react';
-import cornerstone from 'cornerstone-core';
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { Enums, getRenderingEngine, RenderingEngine, Types } from '@cornerstonejs/core';
+import * as cornerstoneTools from '@cornerstonejs/tools';
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 
 import { useWindowSize } from '@/hooks/useWindowSize';
 
 interface PanelProps extends BoxProps {
   imageIds: string[];
+  toolGroup: cornerstoneTools.Types.IToolGroup | undefined;
 }
 
-const Panel = forwardRef<HTMLDivElement, PanelProps>(function Panel(
-  { imageIds, ...rest },
-  outerRef,
+const renderingEngineId = 'myRenderingEngine';
+let renderingEngine: Types.IRenderingEngine | undefined;
+
+const Panel = forwardRef(function Panel(
+  { imageIds, toolGroup, ...rest }: PanelProps,
+  outerRef: React.Ref<HTMLDivElement | null>,
 ) {
-  const panelRef = useRef<HTMLDivElement>(null);
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  useImperativeHandle(outerRef, () => panelRef.current!, [panelRef]);
+  const panelRef = useRef<HTMLDivElement | null>(null);
 
-  const [panel, setPanel] = useState<HTMLDivElement | null>(null);
+  useImperativeHandle(outerRef, () => panelRef.current);
 
-  useEffect(() => {
-    setPanel(panelRef.current);
-  }, [panelRef]);
-
-  useEffect(() => {
-    if (panel) {
-      console.log('enable');
-      cornerstone.enable(panel);
-    }
-    return () => {
-      if (panel) cornerstone.disable(panel);
-    };
-  }, [panel]);
+  const panel = panelRef.current;
 
   const [windowX, windowY] = useWindowSize();
 
   useEffect(() => {
     if (panel) {
-      cornerstone.resize(panel);
-    }
-  }, [panel, windowX, windowY, panel?.clientWidth, panel?.clientHeight]);
+      const viewportInput: Types.PublicViewportInput = {
+        viewportId: 'default',
+        type: Enums.ViewportType.STACK,
+        element: panel,
+        defaultOptions: {
+          background: [0, 0, 0],
+        },
+      };
 
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  useEffect(() => {
-    if (currentImageIndex >= imageIds.length) {
-      setCurrentImageIndex(imageIds.length);
-    } else if (currentImageIndex < 0) {
-      setCurrentImageIndex(0);
-    }
-  }, [currentImageIndex, imageIds.length]);
-
-  useEffect(() => {
-    void (async () => {
-      if (panel && imageIds.length && imageIds[currentImageIndex]) {
-        const image = await cornerstone.loadImage(imageIds[currentImageIndex]);
-        cornerstone.displayImage(panel, image);
+      renderingEngine = getRenderingEngine(renderingEngineId);
+      if (!renderingEngine || renderingEngine.hasBeenDestroyed) {
+        renderingEngine = new RenderingEngine(renderingEngineId);
       }
-    })();
-  }, [panel, imageIds, currentImageIndex]);
 
-  const handleScroll = useCallback((event: WheelEvent) => {
-    event.preventDefault();
-    if (event.deltaY > 0) {
-      setCurrentImageIndex((prev) => prev + 1);
-    } else {
-      setCurrentImageIndex((prev) => prev - 1);
+      renderingEngine.enableElement(viewportInput);
+
+      const viewport = renderingEngine.getViewport(
+        viewportInput.viewportId,
+      ) as Types.IStackViewport;
+      void viewport.setStack(imageIds).then(() => {
+        renderingEngine?.renderViewports([viewportInput.viewportId]);
+      });
+
+      toolGroup?.addViewport(viewportInput.viewportId, renderingEngineId);
     }
-  }, []);
+  }, [panel, imageIds, toolGroup]);
 
   useEffect(() => {
     if (panel) {
-      panel.addEventListener('wheel', handleScroll);
+      renderingEngine?.resize(true, false);
     }
-    return () => {
-      if (panel) {
-        panel.removeEventListener('wheel', handleScroll);
-      }
-    };
-  }, [panel, handleScroll]);
+  }, [panel, windowX, windowY, panel?.clientWidth, panel?.clientHeight]);
 
   return <Box {...rest} ref={panelRef} />;
 });

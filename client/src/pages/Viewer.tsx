@@ -1,11 +1,25 @@
-import { Box, Button, DarkMode, HStack, Input, Text, useNumberInput } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  DarkMode,
+  HStack,
+  Input,
+  Popover,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
+  Text,
+  useNumberInput,
+} from '@chakra-ui/react';
 import * as cornerstone from '@cornerstonejs/core';
 import dicomImageLoader from '@cornerstonejs/dicom-image-loader';
 import * as cornerstoneTools from '@cornerstonejs/tools';
 import dicomParser from 'dicom-parser';
+import { useEffect, useState } from 'react';
 
 import PanelGroup from '@/components/business/PanelGroup';
 import { useAuth } from '@/contexts/authContext';
+import DicomMetadataStore from '@/helpers/DicomMetadataStore/DicomMetadataStore';
 
 await cornerstone.init();
 cornerstoneTools.init({});
@@ -26,6 +40,42 @@ function Viewer() {
   const columnsInput = useNumberInput({ min: 1, defaultValue: 1 });
   const rowsInput = useNumberInput({ min: 1, defaultValue: 1 });
 
+  const [finalText, setFinalText] = useState('');
+
+  useEffect(() => {
+    function updateText() {
+      const study = DicomMetadataStore.getStudy(DicomMetadataStore.getStudyInstanceUIDs()[0]);
+      const firstSeries = study?.series[0];
+      const firstInstance = firstSeries?.instances[0];
+      console.log(firstInstance);
+
+      let text = '';
+      if (!study) {
+        text = 'Tienes que seleccionar un archivo DICOM para ver más información.';
+      } else {
+        const patientName: string =
+          study.PatientName ??
+          firstSeries?.PatientName ??
+          firstInstance?.PatientName ??
+          'Desconocido';
+        text += `Nombre del paciente: ${patientName}\n`;
+
+        const patientID =
+          study.PatientID ?? firstSeries?.PatientID ?? firstInstance?.PatientID ?? 'Desconocido';
+        text += `ID del paciente: ${patientID}\n`;
+
+        const instanceNumber =
+          firstInstance?.InstanceNumber ?? firstSeries?.InstanceNumber ?? 'Desconocido';
+        text += `Número de instancia: ${instanceNumber}\n`;
+      }
+      setFinalText(text);
+    }
+    const id = setInterval(updateText, 1000);
+    return () => {
+      clearInterval(id);
+    };
+  }, []);
+
   return (
     <DarkMode>
       <Box p={4} bgColor="gray.800" h="100vh" w="full" overflow="hidden">
@@ -45,6 +95,18 @@ function Viewer() {
             <Input {...rowsInput.getInputProps()} color="white" />
             <Button {...rowsInput.getIncrementButtonProps()}> + </Button>
           </HStack>
+          <Popover trigger="hover">
+            <PopoverTrigger>
+              <Text color="white">Más Información</Text>
+            </PopoverTrigger>
+            <PopoverContent bgColor="gray.100">
+              <PopoverBody>
+                {finalText.split('\n').map((line, index) => (
+                  <Text key={index}>{line}</Text>
+                ))}
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
         </HStack>
 
         <PanelGroup

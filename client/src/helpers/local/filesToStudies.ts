@@ -1,6 +1,6 @@
 import * as cornerstone from '@cornerstonejs/core';
 
-import { DicomMetadataStore } from '@/helpers/DicomMetadataStore/DicomMetadataStore';
+import DicomMetadataStore from '@/helpers/DicomMetadataStore/DicomMetadataStore';
 import { InstanceMetadata } from '@/helpers/DicomMetadataStore/dicomTypes';
 
 import FileLoaderService from './fileLoaderService';

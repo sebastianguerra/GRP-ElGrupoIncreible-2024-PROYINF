@@ -1,8 +1,9 @@
 import dcmjs from 'dcmjs';
 
+import PubSubInterface from '@/helpers/PubSubServiceInterface';
+
 import createStudyMetadata from './createStudyMetadata';
 import { InstanceMetadata, SeriesMetadata, StudyMetadata } from './dicomTypes';
-import { PubSubInterface } from './pubSubServiceInterface';
 
 type EventTypes = 'studyAdded' | 'instancesAdded' | 'seriesAdded' | 'seriesUpdated';
 

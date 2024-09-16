@@ -1,6 +1,6 @@
 import { guid } from '@/helpers/random';
 
-export abstract class PubSubInterface<
+export default abstract class PubSubInterface<
   EventTypes extends string,
   EventsMap extends Record<EventTypes, unknown>,
 > {

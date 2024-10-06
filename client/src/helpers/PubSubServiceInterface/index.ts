@@ -1,1 +1,1 @@
-export { default } from './PubSubServiceInterface';
+export { default } from './pubSubServiceInterface';

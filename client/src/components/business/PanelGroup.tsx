@@ -1,5 +1,4 @@
 import { Button, Grid, GridItem, HStack, Input, VStack } from '@chakra-ui/react';
-import * as cornerstoneTools from '@cornerstonejs/tools';
 import React from 'react';
 
 import DropInput from '@/components/ui/DropInput';
@@ -11,10 +10,9 @@ import Panel from './Panel';
 interface PanelGroupProps {
   columns: number;
   rows: number;
-  toolGroup: cornerstoneTools.Types.IToolGroup | undefined;
 }
 
-function PanelGroup({ columns, rows, toolGroup }: PanelGroupProps) {
+function PanelGroup({ columns, rows }: PanelGroupProps) {
   const [imageIds, setImageIds] = React.useState<string[]>([]);
 
   const handleFileChange = async (files: File[]) => {
@@ -76,7 +74,6 @@ function PanelGroup({ columns, rows, toolGroup }: PanelGroupProps) {
           {Array.from({ length: columns * rows })
             .map((_, i) => (
               <Panel
-                toolGroup={toolGroup}
                 key={i}
                 imageIds={imageIds}
                 w="full"

@@ -1,20 +1,19 @@
 import { Box, BoxProps } from '@chakra-ui/react';
 import { Enums, getRenderingEngine, RenderingEngine, Types } from '@cornerstonejs/core';
-import * as cornerstoneTools from '@cornerstonejs/tools';
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 
+import { toolGroup } from '@/cornerstone';
 import { useWindowSize } from '@/hooks/useWindowSize';
 
 interface PanelProps extends BoxProps {
   imageIds: string[];
-  toolGroup: cornerstoneTools.Types.IToolGroup | undefined;
 }
 
 const renderingEngineId = 'myRenderingEngine';
 let renderingEngine: Types.IRenderingEngine | undefined;
 
 const Panel = forwardRef(function Panel(
-  { imageIds, toolGroup, ...rest }: PanelProps,
+  { imageIds, ...rest }: PanelProps,
   outerRef: React.Ref<HTMLDivElement | null>,
 ) {
   const panelRef = useRef<HTMLDivElement | null>(null);
@@ -52,7 +51,7 @@ const Panel = forwardRef(function Panel(
 
       toolGroup?.addViewport(viewportInput.viewportId, renderingEngineId);
     }
-  }, [panel, imageIds, toolGroup]);
+  }, [panel, imageIds]);
 
   useEffect(() => {
     if (panel) {

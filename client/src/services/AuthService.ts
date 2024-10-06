@@ -5,7 +5,7 @@ export interface IUser {
   username: string;
 }
 
-const authURL = 'http://localhost:3001';
+const authURL = (import.meta.env.VITE_API_URL as string | undefined) ?? 'http://localhost:3001';
 
 export async function me(token: string | null): Promise<Result<IUser, string>> {
   if (!token) return Err('No token');

@@ -25,4 +25,9 @@ const verifyUser = async (username, password) => {
   return true
 }
 
-export { createUser, findUser, verifyUser }
+const deleteUser = async (username) => {
+  db.data.users = db.data.users.filter(user => user.username !== username)
+  await db.write()
+}
+
+export { createUser, findUser, verifyUser, deleteUser }

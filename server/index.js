@@ -5,7 +5,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
 
-import { createUser, findUser, verifyUser } from './database.js';
+import { createUser, findUser, verifyUser, deleteUser } from './database.js';
 
 const SECRET_KEY = 'secret';
 
@@ -32,6 +32,11 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+// Log all requests
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path}`);
+  next();
+});
 
 const port = process.env.PORT ?? 3001;
 
@@ -84,6 +89,14 @@ app.post('/login', async (req, res) => {
 
 app.get('/me', passport.authenticate('jwt', { session: false }), (req, res) => {
   res.json(req.user);
+});
+
+app.delete('/me', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  const { username } = req.user;
+
+  await deleteUser(username);
+
+  res.status(204).send();
 });
 
 app.listen(port, () => {

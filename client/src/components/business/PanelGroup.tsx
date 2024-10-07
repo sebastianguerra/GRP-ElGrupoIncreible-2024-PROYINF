@@ -16,23 +16,13 @@ interface PanelGroupProps {
 function PanelGroup({ columns, rows }: PanelGroupProps) {
   const [imageIds, setImageIds] = React.useState<string[]>([]);
 
-  const handleFileChange = async (files: File[]) => {
-    const studies = await filesToStudies(files);
-    console.log('studies', studies);
-
-    const studyObjects = studies.map((s) => DicomMetadataStore.getStudy(s)).filter((s) => !!s);
-    console.log('studyObjects', studyObjects);
-
-    const series = studyObjects.flatMap((s) => s.series);
-    console.log('series', series);
-
-    const instances = series.flatMap((s) => s.instances);
-    console.log('instances', instances);
-
-    const imageIds2 = instances.map((i) => i.imageId);
-    console.log('imageIds', imageIds2);
-    setImageIds(imageIds2);
-  };
+  const handleFileChange = (files: File[]) =>
+    filesToStudies(files)
+      .then((studies) => studies.map((s) => DicomMetadataStore.getStudy(s)).filter((s) => !!s))
+      .then((studyObjects) => studyObjects.flatMap((s) => s.series))
+      .then((series) => series.flatMap((s) => s.instances))
+      .then((instances) => instances.map((i) => i.imageId))
+      .then(setImageIds);
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 

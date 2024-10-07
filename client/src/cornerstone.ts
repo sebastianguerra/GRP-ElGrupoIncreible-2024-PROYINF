@@ -9,11 +9,21 @@ cornerstoneTools.init({});
 dicomImageLoader.external.cornerstone = cornerstone;
 dicomImageLoader.external.dicomParser = dicomParser;
 
-const { StackScrollMouseWheelTool, ToolGroupManager } = cornerstoneTools;
+const { StackScrollMouseWheelTool, WindowLevelTool, ToolGroupManager } = cornerstoneTools;
 
 cornerstoneTools.addTool(StackScrollMouseWheelTool);
+cornerstoneTools.addTool(WindowLevelTool);
 
 export const toolGroup = ToolGroupManager.createToolGroup('toolGroupId');
 
 toolGroup?.addTool(StackScrollMouseWheelTool.toolName as string);
 toolGroup?.setToolActive(StackScrollMouseWheelTool.toolName as string);
+
+toolGroup?.addTool(WindowLevelTool.toolName as string);
+toolGroup?.setToolActive(WindowLevelTool.toolName as string, {
+  bindings: [
+    {
+      mouseButton: cornerstoneTools.Enums.MouseBindings.Primary,
+    },
+  ],
+});

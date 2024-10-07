@@ -1,5 +1,6 @@
-import { Button, Grid, GridItem, HStack, Input, VStack } from '@chakra-ui/react';
+import { Grid, GridItem, HStack, IconButton, Input } from '@chakra-ui/react';
 import React from 'react';
+import { FiUpload } from 'react-icons/fi';
 
 import DropInput from '@/components/ui/DropInput';
 import DicomMetadataStore from '@/helpers/DicomMetadataStore/DicomMetadataStore';
@@ -36,31 +37,13 @@ function PanelGroup({ columns, rows }: PanelGroupProps) {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   return (
-    <VStack h="full" w="full" alignItems="stretch">
-      <HStack>
-        <Input
-          ref={fileInputRef}
-          display="none"
-          type="file"
-          multiple
-          onChange={(e) => e.target.files && void handleFileChange(Array.from(e.target.files))}
-        />
-        <Button
-          onClick={() => {
-            if (fileInputRef.current) {
-              fileInputRef.current.click();
-            }
-          }}
-        >
-          Add files
-        </Button>
-      </HStack>
+    <>
       <DropInput
         key={columns * rows}
         onDrop={(files) => void handleFileChange(Array.from(files))}
         borderColor="black"
         onDragOverColor="blue"
-        h="90%"
+        h="full"
         w="full"
         as={HStack}
       >
@@ -89,7 +72,30 @@ function PanelGroup({ columns, rows }: PanelGroupProps) {
             ))}
         </Grid>
       </DropInput>
-    </VStack>
+      <Input
+        ref={fileInputRef}
+        display="none"
+        type="file"
+        multiple
+        onChange={(e) => e.target.files && void handleFileChange(Array.from(e.target.files))}
+      />
+      <IconButton
+        position="absolute"
+        bottom="30px"
+        right="30px"
+        borderRadius="full"
+        icon={<FiUpload />}
+        aria-label="Subir archivos"
+        onClick={() => {
+          if (fileInputRef.current) {
+            fileInputRef.current.click();
+          }
+        }}
+        colorScheme="cyan"
+      >
+        Add files
+      </IconButton>
+    </>
   );
 }
 

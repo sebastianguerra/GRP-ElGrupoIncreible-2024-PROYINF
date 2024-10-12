@@ -12,5 +12,9 @@ export default defineConfig({
   },
   optimizeDeps: {
     exclude: ['@cornerstonejs/dicom-image-loader/dist/dynamic-import/cornerstoneDICOMImageLoader.min.js'],
-  }
+  },
+  server: {
+    port: 4000,
+    host: '0.0.0.0',
+  },
 });

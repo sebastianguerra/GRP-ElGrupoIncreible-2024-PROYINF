@@ -1,15 +1,15 @@
 import { createContext } from 'react';
 import { Result } from 'ts-results';
 
-import { IUser } from '@/services/AuthService';
+import { IUser, JWT } from '@/types/auth';
 
 export interface IAuthContext {
-  token: string | null;
+  token: JWT | null;
   user: IUser | undefined;
   loadingUser: boolean;
   isAuthenticated: boolean;
-  login: (username: string, password: string) => Promise<Result<string, string>>;
-  register: (username: string, password: string) => Promise<Result<string, string>>;
+  login: (username: string, password: string) => Promise<Result<JWT, string>>;
+  register: (username: string, password: string) => Promise<Result<JWT, string>>;
   logout: () => void;
 }
 

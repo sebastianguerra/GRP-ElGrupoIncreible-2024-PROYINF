@@ -1,13 +1,11 @@
 import axios from 'axios';
 import { Err, Ok, Result } from 'ts-results';
 
-export interface IUser {
-  username: string;
-}
+import { IUser, JWT } from '@/types/auth';
 
 const authURL = (import.meta.env.VITE_API_URL as string | undefined) ?? 'http://localhost:3001';
 
-export async function me(token: string | null): Promise<Result<IUser, string>> {
+export async function me(token: JWT | null): Promise<Result<IUser, string>> {
   if (!token) return Err('No token');
   try {
     const response = await axios.get(`${authURL}/me`, {
@@ -38,7 +36,7 @@ async function authQuery(
   path: string,
   username: string,
   password: string,
-): Promise<Result<string, string>> {
+): Promise<Result<JWT, string>> {
   try {
     const response = await axios.post(`${authURL}${path}`, {
       username,
@@ -67,7 +65,7 @@ async function authQuery(
 
     if (typeof responseToken !== 'string') return Err('Invalid token type');
 
-    return Ok(responseToken);
+    return Ok(responseToken as JWT);
   } catch (error: unknown) {
     if (error instanceof Error) {
       const message = error.message;
@@ -89,14 +87,11 @@ async function authQuery(
   }
 }
 
-export async function login(username: string, password: string): Promise<Result<string, string>> {
+export async function login(username: string, password: string): Promise<Result<JWT, string>> {
   return authQuery('/login', username, password);
 }
 
-export async function register(
-  username: string,
-  password: string,
-): Promise<Result<string, string>> {
+export async function register(username: string, password: string): Promise<Result<JWT, string>> {
   return authQuery('/register', username, password);
 }
 

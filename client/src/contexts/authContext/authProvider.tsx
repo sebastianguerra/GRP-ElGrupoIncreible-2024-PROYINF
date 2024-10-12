@@ -3,11 +3,12 @@ import { PropsWithChildren, useCallback } from 'react';
 
 import useLocalStorage from '@/hooks/useLocalStorage';
 import AuthService from '@/services/AuthService';
+import { JWT } from '@/types/auth';
 
 import AuthContext, { IAuthContext } from './authContext';
 
 function AuthProvider({ children }: PropsWithChildren) {
-  const [token, setToken] = useLocalStorage<string | null>('token', null);
+  const [token, setToken] = useLocalStorage<JWT | null>('token', null);
 
   const {
     data: user,

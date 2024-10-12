@@ -1,4 +1,4 @@
-import { guid } from '@/helpers/random';
+import { nanoid } from 'nanoid';
 
 export default abstract class PubSubInterface<
   EventTypes extends string,
@@ -19,7 +19,7 @@ export default abstract class PubSubInterface<
     eventName: K,
     callback: (payload: EventsMap[K]) => void,
   ): () => void {
-    const listenerId = guid();
+    const listenerId = nanoid();
     const subscription = { id: listenerId, callback };
 
     if (eventName in this.listeners && this.listeners[eventName]) {

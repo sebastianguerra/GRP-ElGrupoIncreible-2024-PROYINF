@@ -1,31 +1,29 @@
 import { Grid, GridItem, HStack, IconButton, Input } from '@chakra-ui/react';
-import React from 'react';
+import dicomImageLoader from '@cornerstonejs/dicom-image-loader';
+import React, { useState } from 'react';
 import { FiUpload } from 'react-icons/fi';
 
 import DropInput from '@/components/ui/DropInput';
-import DicomMetadataStore from '@/helpers/DicomMetadataStore/DicomMetadataStore';
-import filesToStudies from '@/helpers/local/filesToStudies';
+import { Layout } from '@/components/ui/LayoutSelector';
 import { ImageId } from '@/types/dicoms';
 
 import Panel from './Panel';
 
 interface PanelGroupProps {
-  columns: number;
-  rows: number;
+  layout: Layout;
 }
 
-function PanelGroup({ columns, rows }: PanelGroupProps) {
-  const [imageIds, setImageIds] = React.useState<ImageId[]>([]);
+function PanelGroup({ layout }: PanelGroupProps) {
+  const [imageIds, setImageIds] = useState<ImageId[]>([]);
 
-  const handleFileChange = (files: File[]) =>
-    filesToStudies(files)
-      .then((studies) => studies.map((s) => DicomMetadataStore.getStudy(s)).filter((s) => !!s))
-      .then((studyObjects) => studyObjects.flatMap((s) => s.series))
-      .then((series) => series.flatMap((s) => s.instances))
-      .then((instances) => instances.map((i) => i.imageId))
-      .then(setImageIds);
+  const handleFileChange = async (files: File[]) =>
+    files.map((f) => {
+      setImageIds((prev) => [...prev, dicomImageLoader.wadouri.fileManager.add(f) as ImageId]);
+    });
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const [columns, rows] = layout;
 
   return (
     <>

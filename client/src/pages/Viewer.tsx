@@ -4,13 +4,13 @@ import { FiLogOut } from 'react-icons/fi';
 
 import DicomHeaderPopover from '@/components/business/DicomHeaderPopover';
 import PanelGroup from '@/components/business/PanelGroup';
-import LayoutSelector from '@/components/ui/LayoutSelector';
+import LayoutSelector, { Layout } from '@/components/ui/LayoutSelector';
 import { useAuth } from '@/contexts/authContext';
 
 function Viewer() {
   const { logout } = useAuth();
 
-  const [layout, setLayout] = useState<[number, number]>([1, 1]);
+  const [layout, setLayout] = useState<Layout>([1, 1]);
 
   return (
     <DarkMode>
@@ -21,6 +21,7 @@ function Viewer() {
               <LayoutSelector layout={layout} setLayout={setLayout} />
               <DicomHeaderPopover />
             </VStack>
+
             <IconButton
               icon={<FiLogOut />}
               onClick={logout}
@@ -28,8 +29,7 @@ function Viewer() {
               aria-label="logout"
             />
           </VStack>
-
-          <PanelGroup columns={layout[0]} rows={layout[1]} />
+          <PanelGroup layout={layout} />
         </HStack>
       </Box>
     </DarkMode>

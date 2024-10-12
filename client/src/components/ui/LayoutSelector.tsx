@@ -11,9 +11,11 @@ import {
 } from '@chakra-ui/react';
 import { LuLayoutGrid, LuSquare } from 'react-icons/lu';
 
+export type Layout = [number, number];
+
 interface LayoutSelectorProps {
-  layout: [number, number];
-  setLayout: (layout: [number, number]) => void;
+  layout: Layout;
+  setLayout: (layout: Layout) => void;
 }
 
 function LayoutSelector({ layout, setLayout }: LayoutSelectorProps) {

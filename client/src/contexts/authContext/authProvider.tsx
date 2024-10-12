@@ -9,11 +9,17 @@ import AuthContext, { IAuthContext } from './authContext';
 function AuthProvider({ children }: PropsWithChildren) {
   const [token, setToken] = useLocalStorage<string | null>('token', null);
 
-  const { data: user, isLoading: loadingUser } = useQuery({
-    queryKey: ['user'],
-    queryFn: () => AuthService.me(token).then((r) => r.unwrapOr(undefined)),
+  const {
+    data: user,
+    isLoading: loadingUser,
+    isError,
+  } = useQuery({
+    queryKey: ['user', token],
+    queryFn: () => AuthService.me(token),
+    select: (data) => data.unwrap(),
     enabled: !!token,
     refetchInterval: 1000,
+    retry: 3,
   });
 
   const login = useCallback(
@@ -42,7 +48,7 @@ function AuthProvider({ children }: PropsWithChildren) {
     token,
     user: user,
     loadingUser,
-    isAuthenticated: !!user && !!token,
+    isAuthenticated: !!user && !!token && !isError,
     login,
     register,
     logout,

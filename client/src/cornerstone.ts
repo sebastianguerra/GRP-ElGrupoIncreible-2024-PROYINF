@@ -4,26 +4,35 @@ import * as cornerstoneTools from '@cornerstonejs/tools';
 import dicomParser from 'dicom-parser';
 
 await cornerstone.init();
-cornerstoneTools.init({});
 
 dicomImageLoader.external.cornerstone = cornerstone;
 dicomImageLoader.external.dicomParser = dicomParser;
 
-const { StackScrollMouseWheelTool, WindowLevelTool, ToolGroupManager } = cornerstoneTools;
+cornerstoneTools.init({});
 
-cornerstoneTools.addTool(StackScrollMouseWheelTool);
-cornerstoneTools.addTool(WindowLevelTool);
+const { StackScrollMouseWheelTool, WindowLevelTool, ToolGroupManager, addTool, Enums } =
+  cornerstoneTools;
 
-export const toolGroup = ToolGroupManager.createToolGroup('toolGroupId');
+addTool(StackScrollMouseWheelTool);
+addTool(WindowLevelTool);
 
-toolGroup?.addTool(StackScrollMouseWheelTool.toolName as string);
-toolGroup?.setToolActive(StackScrollMouseWheelTool.toolName as string);
+const maybeToolGroup = ToolGroupManager.createToolGroup('toolGroupId');
+if (!maybeToolGroup) {
+  throw new Error('Tool group not created');
+}
+export const toolGroup = maybeToolGroup;
 
-toolGroup?.addTool(WindowLevelTool.toolName as string);
-toolGroup?.setToolActive(WindowLevelTool.toolName as string, {
+toolGroup.addTool(StackScrollMouseWheelTool.toolName as string);
+toolGroup.addTool(WindowLevelTool.toolName as string);
+
+toolGroup.setToolActive(StackScrollMouseWheelTool.toolName as string);
+toolGroup.setToolActive(WindowLevelTool.toolName as string, {
   bindings: [
     {
-      mouseButton: cornerstoneTools.Enums.MouseBindings.Primary,
+      mouseButton: Enums.MouseBindings.Primary,
     },
   ],
 });
+
+export const renderingEngineId = 'myRenderingEngine';
+export const renderingEngine = new cornerstone.RenderingEngine(renderingEngineId);

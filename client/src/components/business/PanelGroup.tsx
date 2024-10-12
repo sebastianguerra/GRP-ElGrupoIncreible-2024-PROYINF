@@ -29,7 +29,7 @@ function PanelGroup({ columns, rows }: PanelGroupProps) {
   return (
     <>
       <DropInput
-        key={columns * rows}
+        key={`${columns.toString()}x${rows.toString()}`}
         onDrop={(files) => void handleFileChange(Array.from(files))}
         borderColor="black"
         onDragOverColor="blue"
@@ -43,11 +43,15 @@ function PanelGroup({ columns, rows }: PanelGroupProps) {
           bgColor="black"
           templateColumns={`repeat(${columns.toString()}, 1fr)`}
           templateRows={`repeat(${rows.toString()}, 1fr)`}
+          key={`${columns.toString()}x${rows.toString()}`}
         >
-          {Array.from({ length: columns * rows })
-            .map((_, i) => (
+          {Array.from({ length: columns * rows }).map((_, i) => (
+            <GridItem
+              key={`panel-${i.toString()}-group-${columns.toString()}x${rows.toString()}`}
+              w="full"
+              h="full"
+            >
               <Panel
-                key={i}
                 imageIds={imageIds}
                 w="full"
                 h="full"
@@ -56,10 +60,8 @@ function PanelGroup({ columns, rows }: PanelGroupProps) {
                 borderStyle="solid"
                 borderRadius="5px"
               />
-            ))
-            .map((panel, i) => (
-              <GridItem key={i}>{panel}</GridItem>
-            ))}
+            </GridItem>
+          ))}
         </Grid>
       </DropInput>
       <Input

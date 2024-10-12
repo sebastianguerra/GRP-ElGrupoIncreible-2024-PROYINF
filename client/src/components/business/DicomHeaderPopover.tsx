@@ -19,7 +19,6 @@ function DicomHeaderPopover() {
       const study = DicomMetadataStore.getStudy(DicomMetadataStore.getStudyInstanceUIDs()[0]);
       const firstSeries = study?.series[0];
       const firstInstance = firstSeries?.instances[0];
-      console.log(firstInstance);
 
       let text = '';
       if (!study) {

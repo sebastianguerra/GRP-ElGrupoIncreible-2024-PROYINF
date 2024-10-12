@@ -22,6 +22,7 @@
     "dcmjs": "^0.34.1",
     "dicom-parser": "^1.8.21",
     "framer-motion": "^11.5.4",
+    "nanoid": "^5.0.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-fast-compare": "^3.2.2",

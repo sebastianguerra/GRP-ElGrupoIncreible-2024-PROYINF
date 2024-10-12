@@ -76,15 +76,9 @@ function PanelGroup({ columns, rows }: PanelGroupProps) {
         borderRadius="full"
         icon={<FiUpload />}
         aria-label="Subir archivos"
-        onClick={() => {
-          if (fileInputRef.current) {
-            fileInputRef.current.click();
-          }
-        }}
+        onClick={() => fileInputRef.current?.click()}
         colorScheme="cyan"
-      >
-        Add files
-      </IconButton>
+      />
     </>
   );
 }

@@ -1,33 +1,23 @@
 import dicomImageLoader from '@cornerstonejs/dicom-image-loader';
 import dcmjs from 'dcmjs';
 
+import { InstanceMetadata } from '@/helpers/DicomMetadataStore/dicomTypes';
+
 class FileLoaderService {
   addFile(file: File) {
     return dicomImageLoader.wadouri.fileManager.add(file);
   }
 
-  loadFile(_: unknown, imageId: string): Promise<ArrayBuffer> {
+  loadFile(imageId: string): Promise<ArrayBuffer> {
     return dicomImageLoader.wadouri.loadFileRequest(imageId);
   }
 
-  getDataset(image: ArrayBuffer, imageId: string): object {
+  getDataset(image: ArrayBuffer): InstanceMetadata {
     const dicomData = dcmjs.data.DicomMessage.readFile(image);
 
-    interface DicomDataset {
-      url: string;
-      _meta: {
-        TransferSyntaxUID?: { Value: string[] };
-      };
-      AvailableTransferSyntaxUID?: string;
-    }
     const dataset = dcmjs.data.DicomMetaDictionary.naturalizeDataset(
       dicomData.dict,
-    ) as DicomDataset;
-
-    dataset.url = imageId;
-    dataset._meta = dcmjs.data.DicomMetaDictionary.namifyDataset(dicomData.meta);
-    dataset.AvailableTransferSyntaxUID =
-      dataset.AvailableTransferSyntaxUID ?? dataset._meta.TransferSyntaxUID?.Value[0];
+    ) as InstanceMetadata;
 
     return dataset;
   }

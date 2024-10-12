@@ -25,11 +25,11 @@ class DicomMetadataStore extends PubSubInterface<EventTypes, EventsMap> {
     studies: [],
   };
 
-  getStudy(StudyInstanceUID: string | undefined): StudyMetadata | undefined {
+  getStudy(StudyInstanceUID: string): StudyMetadata | undefined {
     return this.storeModel.studies.find((aStudy) => aStudy.StudyInstanceUID === StudyInstanceUID);
   }
 
-  getSeries(StudyInstanceUID: string | undefined, SeriesInstanceUID: string) {
+  getSeries(StudyInstanceUID: string, SeriesInstanceUID: string) {
     const study = this.getStudy(StudyInstanceUID);
 
     if (!study) {
@@ -54,11 +54,9 @@ class DicomMetadataStore extends PubSubInterface<EventTypes, EventsMap> {
 
     // If Arraybuffer, parse to DICOMJSON before naturalizing.
     if (dicomJSONDatasetOrP10ArrayBuffer instanceof ArrayBuffer) {
-      const dicomData = dcmjs.data.DicomMessage.readFile(dicomJSONDatasetOrP10ArrayBuffer) as {
-        dict: InstanceMetadata;
-      };
+      const dicomData = dcmjs.data.DicomMessage.readFile(dicomJSONDatasetOrP10ArrayBuffer);
 
-      dicomJSONDataset = dicomData.dict;
+      dicomJSONDataset = dicomData.dict as InstanceMetadata;
     } else {
       dicomJSONDataset = dicomJSONDatasetOrP10ArrayBuffer;
     }
@@ -106,7 +104,7 @@ class DicomMetadataStore extends PubSubInterface<EventTypes, EventsMap> {
     });
   }
 
-  updateSeriesMetadata(seriesMetadata: SeriesMetadata) {
+  updateSeriesMetadata(seriesMetadata: SeriesMetadata & { StudyInstanceUID: string }) {
     const { StudyInstanceUID, SeriesInstanceUID } = seriesMetadata;
     const series = this.getSeries(StudyInstanceUID, SeriesInstanceUID);
     if (!series) {

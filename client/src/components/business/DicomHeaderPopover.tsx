@@ -24,23 +24,13 @@ function DicomHeaderPopover() {
       if (!study) {
         text = 'Tienes que seleccionar un archivo DICOM para ver más información.';
       } else {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const patientName: string =
-          study.PatientName ??
-          firstSeries?.PatientName ??
-          firstInstance?.PatientName ??
-          'Desconocido';
+        const patientName: string = study.PatientName ?? 'Desconocido';
         text += `Nombre del paciente: ${patientName}\n`;
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const patientID =
-          study.PatientID ?? firstSeries?.PatientID ?? firstInstance?.PatientID ?? 'Desconocido';
+        const patientID = study.PatientID ?? 'Desconocido';
         text += `ID del paciente: ${patientID}\n`;
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const instanceNumber =
-          firstInstance?.InstanceNumber ?? firstSeries?.InstanceNumber ?? 'Desconocido';
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        const instanceNumber = firstInstance?.InstanceNumber ?? 'Desconocido';
         text += `Número de instancia: ${instanceNumber}\n`;
       }
       setFinalText(text);

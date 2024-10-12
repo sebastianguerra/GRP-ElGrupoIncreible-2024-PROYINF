@@ -1,5 +1,4 @@
 import { Grid, GridItem, HStack, IconButton, Input } from '@chakra-ui/react';
-import dicomImageLoader from '@cornerstonejs/dicom-image-loader';
 import React, { useState } from 'react';
 import { FiUpload } from 'react-icons/fi';
 
@@ -8,6 +7,7 @@ import { Layout } from '@/components/ui/LayoutSelector';
 import { ImageId } from '@/types/dicoms';
 
 import Panel from './Panel';
+import { addFiles } from '@/helpers/dicoms';
 
 interface PanelGroupProps {
   layout: Layout;
@@ -16,10 +16,7 @@ interface PanelGroupProps {
 function PanelGroup({ layout }: PanelGroupProps) {
   const [imageIds, setImageIds] = useState<ImageId[]>([]);
 
-  const handleFileChange = async (files: File[]) =>
-    files.map((f) => {
-      setImageIds((prev) => [...prev, dicomImageLoader.wadouri.fileManager.add(f) as ImageId]);
-    });
+  const handleFileChange = async (files: File[]) => setImageIds(await addFiles(files));
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 

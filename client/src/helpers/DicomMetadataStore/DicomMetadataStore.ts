@@ -1,9 +1,9 @@
 import dcmjs from 'dcmjs';
 
 import PubSubInterface from '@/helpers/PubSubServiceInterface';
+import { ImageId, InstanceMetadata, SeriesMetadata, StudyMetadata } from '@/types/dicoms';
 
 import createStudyMetadata from './createStudyMetadata';
-import { InstanceMetadata, SeriesMetadata, StudyMetadata } from './dicomTypes';
 
 type EventTypes = 'studyAdded' | 'instancesAdded' | 'seriesAdded' | 'seriesUpdated';
 
@@ -49,7 +49,7 @@ class DicomMetadataStore extends PubSubInterface<EventTypes, EventsMap> {
     return series.getInstance(SOPInstanceUID);
   }
 
-  addInstance(dicomJSONDatasetOrP10ArrayBuffer: InstanceMetadata | ArrayBuffer, imageId: string) {
+  addInstance(dicomJSONDatasetOrP10ArrayBuffer: InstanceMetadata | ArrayBuffer, imageId: ImageId) {
     let dicomJSONDataset;
 
     // If Arraybuffer, parse to DICOMJSON before naturalizing.
@@ -175,7 +175,7 @@ class DicomMetadataStore extends PubSubInterface<EventTypes, EventsMap> {
     }
   }
 
-  getInstanceByImageId(imageId: string) {
+  getInstanceByImageId(imageId: ImageId) {
     for (const study of this.storeModel.studies) {
       for (const series of study.series) {
         for (const instance of series.instances) {

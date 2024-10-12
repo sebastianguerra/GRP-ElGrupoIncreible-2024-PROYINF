@@ -1,3 +1,7 @@
+import { Branded } from './branded';
+
+export type ImageId = Branded<string, 'ImageId'>;
+
 export interface InstanceMetadata {
   SOPInstanceUID: string;
   SOPClassUID: string;
@@ -8,7 +12,7 @@ export interface InstanceMetadata {
   InstanceNumber: string;
   SeriesInstanceUID?: string;
   StudyDescription: string;
-  imageId: string;
+  imageId: ImageId;
   StudyInstanceUID: string;
 }
 

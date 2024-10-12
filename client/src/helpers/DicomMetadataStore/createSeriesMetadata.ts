@@ -1,4 +1,4 @@
-import { InstanceMetadata, SeriesMetadata } from './dicomTypes';
+import { InstanceMetadata, SeriesMetadata } from '@/types/dicoms';
 
 function createSeriesMetadata(SeriesInstanceUID: string): SeriesMetadata {
   const instances: InstanceMetadata[] = [];

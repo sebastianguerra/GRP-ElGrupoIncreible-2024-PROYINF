@@ -1,5 +1,6 @@
+import { InstanceMetadata, StudyMetadata } from '@/types/dicoms';
+
 import createSeriesMetadata from './createSeriesMetadata';
-import { InstanceMetadata, StudyMetadata } from './dicomTypes';
 
 function createStudyMetadata(StudyInstanceUID: string): StudyMetadata {
   return {

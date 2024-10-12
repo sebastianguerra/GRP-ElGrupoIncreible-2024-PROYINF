@@ -1,14 +1,14 @@
 import dicomImageLoader from '@cornerstonejs/dicom-image-loader';
 import dcmjs from 'dcmjs';
 
-import { InstanceMetadata } from '@/helpers/DicomMetadataStore/dicomTypes';
+import { ImageId, InstanceMetadata } from '@/types/dicoms';
 
 class FileLoaderService {
   addFile(file: File) {
-    return dicomImageLoader.wadouri.fileManager.add(file);
+    return dicomImageLoader.wadouri.fileManager.add(file) as ImageId;
   }
 
-  loadFile(imageId: string): Promise<ArrayBuffer> {
+  loadFile(imageId: ImageId): Promise<ArrayBuffer> {
     return dicomImageLoader.wadouri.loadFileRequest(imageId);
   }
 

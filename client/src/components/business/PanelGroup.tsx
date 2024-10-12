@@ -5,6 +5,7 @@ import { FiUpload } from 'react-icons/fi';
 import DropInput from '@/components/ui/DropInput';
 import DicomMetadataStore from '@/helpers/DicomMetadataStore/DicomMetadataStore';
 import filesToStudies from '@/helpers/local/filesToStudies';
+import { ImageId } from '@/types/dicoms';
 
 import Panel from './Panel';
 
@@ -14,7 +15,7 @@ interface PanelGroupProps {
 }
 
 function PanelGroup({ columns, rows }: PanelGroupProps) {
-  const [imageIds, setImageIds] = React.useState<string[]>([]);
+  const [imageIds, setImageIds] = React.useState<ImageId[]>([]);
 
   const handleFileChange = (files: File[]) =>
     filesToStudies(files)

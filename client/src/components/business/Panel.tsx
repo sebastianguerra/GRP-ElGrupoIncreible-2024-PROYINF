@@ -5,9 +5,10 @@ import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 
 import { renderingEngine, renderingEngineId, toolGroup } from '@/cornerstone';
 import { useWindowSize } from '@/hooks/useWindowSize';
+import { ImageId } from '@/types/dicoms';
 
 interface PanelProps extends BoxProps {
-  imageIds: string[];
+  imageIds: ImageId[];
 }
 
 const Panel = forwardRef(function Panel(

@@ -7,47 +7,49 @@ interface IUseLocalStorageOptions<T> {
   sync?: boolean;
 }
 
+type ValueOrFn<T> = T | ((prev: T) => T);
+type SetLocalStorageValue<T> = (valueOrFn: ValueOrFn<T>) => void;
+
 function useLocalStorage<T>(
   key: string,
   defaultValue: T,
   options: IUseLocalStorageOptions<T> = {},
-): [T, (valueOrFn: T | ((prev: T) => T)) => void] {
+): [T, SetLocalStorageValue<T>] {
   const {
     encode = JSON.stringify as (value: T) => string,
     decode = JSON.parse as (value: string) => T,
     sync = true,
   } = options;
 
-  const [localStorageValue, setLocalStorageValue] = useState<T>(() => {
-    const value = localStorage.getItem(key);
-    if (value) {
-      return decode(value);
-    }
-    return defaultValue;
-  });
+  const decodeOrDefault = useCallback(
+    (value: string | null) => {
+      if (value) return decode(value);
+      return defaultValue;
+    },
+    [decode, defaultValue],
+  );
+
+  const [localStorageValue, setLocalStorageValue] = useState<T>(() =>
+    decodeOrDefault(localStorage.getItem(key)),
+  );
 
   useEffect(() => {
     localStorage.setItem(key, encode(localStorageValue));
   }, [key, localStorageValue, encode]);
 
-  const setLocalStorageStateValue = useCallback((valueOrFn: T | ((prev: T) => T)) => {
-    setLocalStorageValue((prev) => (valueOrFn instanceof Function ? valueOrFn(prev) : valueOrFn));
-  }, []);
+  const setLocalStorageStateValue = useCallback(
+    (valueOrFn: ValueOrFn<T>) => {
+      const newValue = valueOrFn instanceof Function ? valueOrFn(localStorageValue) : valueOrFn;
+      if (!isEqual(localStorageValue, newValue)) setLocalStorageValue(newValue);
+    },
+    [localStorageValue],
+  );
 
   useEffect(() => {
     if (!sync) return () => {};
 
     const update = (event: StorageEvent) => {
-      if (event.key === key) {
-        if (event.newValue === null) {
-          setLocalStorageValue(defaultValue);
-        } else {
-          const newValue = decode(event.newValue);
-          if (!isEqual(localStorageValue, newValue)) {
-            setLocalStorageValue(newValue);
-          }
-        }
-      }
+      if (event.key === key) setLocalStorageStateValue(decodeOrDefault(event.newValue));
     };
 
     window.addEventListener('storage', update);
@@ -55,7 +57,7 @@ function useLocalStorage<T>(
     return () => {
       window.removeEventListener('storage', update);
     };
-  }, [sync, decode, defaultValue, key, localStorageValue]);
+  }, [sync, key, decodeOrDefault, setLocalStorageStateValue]);
 
   return [localStorageValue, setLocalStorageStateValue];
 }

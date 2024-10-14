@@ -17,11 +17,7 @@ const Panel = forwardRef(function Panel(
   outerRef: React.Ref<HTMLDivElement | null>,
 ) {
   const imageIds = useMemo(
-    () =>
-      _imageIds
-        .map(getInstance)
-        .toSorted((a, b) => a.SliceLocation - b.SliceLocation)
-        .map((i) => i.imageId),
+    () => _imageIds.toSorted((a, b) => getInstance(a).SliceLocation - getInstance(b).SliceLocation),
     [_imageIds],
   );
 

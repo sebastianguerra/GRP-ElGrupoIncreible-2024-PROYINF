@@ -19,6 +19,16 @@ cornerstone.volumeLoader.registerVolumeLoader(
 
 cornerstoneTools.init({});
 
+try {
+  // Adds the cornerstone and cornerstoneTools objects to the window object for debugging purposes
+  (window as unknown as { cornerstone: typeof cornerstone }).cornerstone = { ...cornerstone };
+  (window as unknown as { cornerstoneTools: typeof cornerstoneTools }).cornerstoneTools = {
+    ...cornerstoneTools,
+  };
+} finally {
+  // Pass
+}
+
 const { StackScrollMouseWheelTool, WindowLevelTool, ToolGroupManager, addTool, Enums } =
   cornerstoneTools;
 

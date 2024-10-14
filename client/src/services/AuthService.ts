@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Err, Ok, Result } from 'ts-results';
 
+import { hasProperty } from '@/helpers/objects';
 import { IUser, JWT } from '@/types/auth';
 
 const authURL = (import.meta.env.VITE_API_URL as string | undefined) ?? 'http://localhost:3001';
@@ -15,8 +16,8 @@ export async function me(token: JWT | null): Promise<Result<IUser, string>> {
     });
     const data: unknown = response.data;
 
-    if (typeof data !== 'object' || data === null) return Err('Invalid response');
-    if (!('username' in data) || typeof data.username !== 'string') return Err('Invalid username');
+    if (!hasProperty(data, 'username')) return Err('Invalid username');
+    if (typeof data.username !== 'string') return Err('Invalid username');
 
     return Ok({
       username: data.username,
@@ -58,9 +59,7 @@ async function authQuery(
     }
     const data: unknown = response.data;
 
-    if (typeof data !== 'object' || data === null) return Err('Invalid response');
-
-    if (!('token' in data) || !data.token) return Err('Invalid token');
+    if (!hasProperty(data, 'token')) return Err('Invalid response');
     const responseToken = data.token;
 
     if (typeof responseToken !== 'string') return Err('Invalid token type');

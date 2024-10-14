@@ -1,9 +1,11 @@
 import { Box, BoxProps, useConst } from '@chakra-ui/react';
 import { Enums, Types } from '@cornerstonejs/core';
 import { nanoid } from 'nanoid';
-import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } from 'react';
 
 import { renderingEngine, renderingEngineId, toolGroup } from '@/cornerstone';
+import { getInstance } from '@/helpers/dicoms';
+import { hasProperty } from '@/helpers/objects';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { ImageId } from '@/types/dicoms';
 
@@ -12,9 +14,24 @@ interface PanelProps extends BoxProps {
 }
 
 const Panel = forwardRef(function Panel(
-  { imageIds, ...rest }: PanelProps,
+  { imageIds: _imageIds, ...rest }: PanelProps,
   outerRef: React.Ref<HTMLDivElement | null>,
 ) {
+  const imageIds = useMemo(() => {
+    return _imageIds.toSorted((a, b) => {
+      const aInstance = getInstance(a);
+      const bInstance = getInstance(b);
+
+      if (!hasProperty(bInstance, 'SliceLocation')) return 0;
+      if (!hasProperty(aInstance, 'SliceLocation')) return 0;
+
+      if (!(typeof bInstance.SliceLocation === 'number')) return 0;
+      if (!(typeof aInstance.SliceLocation === 'number')) return 0;
+
+      return aInstance.SliceLocation - bInstance.SliceLocation;
+    });
+  }, [_imageIds]);
+
   const panelRef = useRef<HTMLDivElement | null>(null);
 
   useImperativeHandle(outerRef, () => panelRef.current);
@@ -46,7 +63,7 @@ const Panel = forwardRef(function Panel(
 
   useEffect(() => {
     const viewport = renderingEngine.getViewport(viewportId) as Types.IStackViewport | undefined;
-    if (viewport) {
+    if (viewport && imageIds.length > 0) {
       void viewport.setStack(imageIds).then(() => {
         renderingEngine.renderViewports([viewportId]);
       });

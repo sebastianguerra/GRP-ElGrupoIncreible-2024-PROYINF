@@ -15,3 +15,7 @@ export async function addFile(f: File): Promise<ImageId> {
 export async function addFiles(files: File[]): Promise<ImageId[]> {
   return Promise.all(files.map((f) => addFile(f)));
 }
+
+export function getInstance(imageId: ImageId) {
+  return cornerstone.metaData.get('instance', imageId) as unknown;
+}

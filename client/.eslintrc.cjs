@@ -77,7 +77,8 @@ module.exports = {
         allowNullish: false,
         allowAny: false,
       },
-    ]
+    ],
+    'complexity': ['error', 3]
   },
   settings: {
     react: {

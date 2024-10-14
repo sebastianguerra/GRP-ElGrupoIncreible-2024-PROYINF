@@ -16,8 +16,8 @@ function AuthProvider({ children }: PropsWithChildren) {
     isError,
   } = useQuery({
     queryKey: ['user', token],
-    queryFn: () => AuthService.me(token),
-    select: (data) => data.unwrap(),
+    queryFn: () => token && AuthService.me(token),
+    select: (data) => data?.unwrap(),
     enabled: !!token,
     refetchInterval: 1000,
     retry: 3,

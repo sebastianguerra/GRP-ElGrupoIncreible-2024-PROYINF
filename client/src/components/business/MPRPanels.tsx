@@ -1,5 +1,5 @@
 import { Box, HStack } from '@chakra-ui/react';
-import * as cornerstone from '@cornerstonejs/core';
+import { Enums, setVolumesForViewports, Types, volumeLoader } from '@cornerstonejs/core';
 import { useEffect, useMemo, useRef } from 'react';
 
 import { renderingEngine, toolGroup } from '@/cornerstone';
@@ -22,17 +22,17 @@ export default function MPRPanels({ imageIds }: PanelProps) {
 
   useEffect(() => {
     const orientations = [
-      cornerstone.Enums.OrientationAxis.AXIAL,
-      cornerstone.Enums.OrientationAxis.SAGITTAL,
-      cornerstone.Enums.OrientationAxis.CORONAL,
+      Enums.OrientationAxis.AXIAL,
+      Enums.OrientationAxis.SAGITTAL,
+      Enums.OrientationAxis.CORONAL,
     ];
 
-    const viewportInput: cornerstone.Types.PublicViewportInput[] = [0, 1, 2].map((_, i) => {
+    const viewportInput: Types.PublicViewportInput[] = [0, 1, 2].map((_, i) => {
       if (!refs[i].current) throw new Error('Ref not set');
       return {
         viewportId: viewportIds[i],
         element: refs[i].current,
-        type: cornerstone.Enums.ViewportType.ORTHOGRAPHIC,
+        type: Enums.ViewportType.ORTHOGRAPHIC,
         defaultOptions: { orientation: orientations[i] },
       };
     });
@@ -55,13 +55,13 @@ export default function MPRPanels({ imageIds }: PanelProps) {
     void (async () => {
       if (!imageIds.length) return;
 
-      const volume = (await cornerstone.volumeLoader.createAndCacheVolume(volumeId, {
+      const volume = (await volumeLoader.createAndCacheVolume(volumeId, {
         imageIds,
       })) as { load: () => Promise<void> };
 
       await volume.load();
 
-      await cornerstone.setVolumesForViewports(renderingEngine, [{ volumeId }], viewportIds);
+      await setVolumesForViewports(renderingEngine, [{ volumeId }], viewportIds);
 
       renderingEngine.renderViewports(viewportIds);
     })();

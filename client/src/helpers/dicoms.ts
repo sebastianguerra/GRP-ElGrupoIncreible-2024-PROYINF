@@ -17,8 +17,12 @@ export async function addFile(f: File): Promise<ImageId> {
 export async function addFiles(files: File[]): Promise<ImageId[]> {
   return Promise.all(files.map((f) => addFile(f)));
 }
+export function getMetadata(imageId: ImageId, type: string) {
+  return cornerstone.metaData.get(type, imageId) as unknown;
+}
+
 export function getInstance(imageId: ImageId) {
-  const instance = cornerstone.metaData.get('instance', imageId) as unknown;
+  const instance = getMetadata(imageId, 'instance');
 
   if (!isValidInstance(instance)) throw new Error('Invalid instance');
 

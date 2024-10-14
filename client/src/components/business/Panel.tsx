@@ -5,7 +5,6 @@ import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } from 'rea
 
 import { renderingEngine, renderingEngineId, toolGroup } from '@/cornerstone';
 import { getInstance } from '@/helpers/dicoms';
-import { hasProperty } from '@/helpers/objects';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { ImageId } from '@/types/dicoms';
 
@@ -17,20 +16,14 @@ const Panel = forwardRef(function Panel(
   { imageIds: _imageIds, ...rest }: PanelProps,
   outerRef: React.Ref<HTMLDivElement | null>,
 ) {
-  const imageIds = useMemo(() => {
-    return _imageIds.toSorted((a, b) => {
-      const aInstance = getInstance(a);
-      const bInstance = getInstance(b);
-
-      if (!hasProperty(bInstance, 'SliceLocation')) return 0;
-      if (!hasProperty(aInstance, 'SliceLocation')) return 0;
-
-      if (!(typeof bInstance.SliceLocation === 'number')) return 0;
-      if (!(typeof aInstance.SliceLocation === 'number')) return 0;
-
-      return aInstance.SliceLocation - bInstance.SliceLocation;
-    });
-  }, [_imageIds]);
+  const imageIds = useMemo(
+    () =>
+      _imageIds
+        .map(getInstance)
+        .toSorted((a, b) => a.SliceLocation - b.SliceLocation)
+        .map((i) => i.imageId),
+    [_imageIds],
+  );
 
   const panelRef = useRef<HTMLDivElement | null>(null);
 

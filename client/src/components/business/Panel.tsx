@@ -1,10 +1,9 @@
-import { Box, BoxProps, useConst } from '@chakra-ui/react';
+import { Box, BoxProps } from '@chakra-ui/react';
 import { Enums, Types } from '@cornerstonejs/core';
-import { nanoid } from 'nanoid';
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 
 import { renderingEngine, renderingEngineId, toolGroup } from '@/cornerstone';
-import { getInstance } from '@/helpers/dicoms';
+import useNanoId from '@/hooks/useNanoId';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { ImageId } from '@/types/dicoms';
 
@@ -13,21 +12,13 @@ interface PanelProps extends BoxProps {
 }
 
 const Panel = forwardRef(function Panel(
-  { imageIds: _imageIds, ...rest }: PanelProps,
+  { imageIds, ...rest }: PanelProps,
   outerRef: React.Ref<HTMLDivElement | null>,
 ) {
-  const imageIds = useMemo(
-    () => _imageIds.toSorted((a, b) => getInstance(a).SliceLocation - getInstance(b).SliceLocation),
-    [_imageIds],
-  );
-
   const panelRef = useRef<HTMLDivElement | null>(null);
-
   useImperativeHandle(outerRef, () => panelRef.current);
 
-  const [windowX, windowY] = useWindowSize();
-
-  const viewportId = useConst(() => nanoid());
+  const viewportId = useNanoId();
 
   useEffect(() => {
     if (panelRef.current) {
@@ -59,6 +50,7 @@ const Panel = forwardRef(function Panel(
     }
   }, [viewportId, imageIds]);
 
+  const [windowX, windowY] = useWindowSize();
   useEffect(() => {
     renderingEngine.resize(true, false);
   }, [panelRef, windowX, windowY]);

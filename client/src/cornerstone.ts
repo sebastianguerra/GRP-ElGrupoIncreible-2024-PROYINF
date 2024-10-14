@@ -1,5 +1,6 @@
 import * as cornerstone from '@cornerstonejs/core';
 import dicomImageLoader from '@cornerstonejs/dicom-image-loader';
+import { cornerstoneStreamingImageVolumeLoader } from '@cornerstonejs/streaming-image-volume-loader';
 import * as cornerstoneTools from '@cornerstonejs/tools';
 import dicomParser from 'dicom-parser';
 
@@ -7,6 +8,14 @@ await cornerstone.init();
 
 dicomImageLoader.external.cornerstone = cornerstone;
 dicomImageLoader.external.dicomParser = dicomParser;
+
+cornerstone.volumeLoader.registerUnknownVolumeLoader(
+  cornerstoneStreamingImageVolumeLoader as unknown as cornerstone.Types.VolumeLoaderFn,
+);
+cornerstone.volumeLoader.registerVolumeLoader(
+  'cornerstoneStreamingImageVolume',
+  cornerstoneStreamingImageVolumeLoader as unknown as cornerstone.Types.VolumeLoaderFn,
+);
 
 cornerstoneTools.init({});
 

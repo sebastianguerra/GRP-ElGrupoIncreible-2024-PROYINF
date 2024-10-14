@@ -10,7 +10,7 @@ import { useAuth } from '@/contexts/authContext';
 function Viewer() {
   const { logout } = useAuth();
 
-  const [layout, setLayout] = useState<Layout>([1, 1]);
+  const [layout, setLayout] = useState<Layout>({ type: 'stack-grid', grid: [1, 1] });
 
   return (
     <DarkMode>

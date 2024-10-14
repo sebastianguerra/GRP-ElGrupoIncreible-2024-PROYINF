@@ -33,7 +33,7 @@ function LayoutSelector({ layout, setLayout }: LayoutSelectorProps) {
           <Grid templateColumns="repeat(4, 1fr)" gap={0}>
             {Array.from({ length: 4 }, (_, j) =>
               Array.from({ length: 4 }, (__, i) => (
-                <GridItem colSpan={1} w="min-content" key={`${j.toString()}-${i.toString()}`}>
+                <GridItem colSpan={1} w="min-content" key={`${j}-${i}`}>
                   <IconButton
                     icon={<LuSquare />}
                     aria-label="Seleccionar diseño"

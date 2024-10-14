@@ -69,6 +69,15 @@ module.exports = {
         },
       },
     ],
+    '@typescript-eslint/restrict-template-expressions': [
+      'error',
+      {
+        allowNumber: true,
+        allowBoolean: false,
+        allowNullish: false,
+        allowAny: false,
+      },
+    ]
   },
   settings: {
     react: {

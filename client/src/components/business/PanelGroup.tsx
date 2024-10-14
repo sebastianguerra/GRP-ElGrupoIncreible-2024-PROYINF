@@ -40,7 +40,7 @@ function PanelGroup({ layout }: PanelGroupProps) {
   return (
     <>
       <DropInput
-        key={`${columns.toString()}x${rows.toString()}`}
+        key={`${columns}x${rows}`}
         onDrop={(files) => void handleFileChange(Array.from(files))}
         borderColor="black"
         onDragOverColor="blue"
@@ -52,16 +52,12 @@ function PanelGroup({ layout }: PanelGroupProps) {
           w="full"
           h="full"
           bgColor="black"
-          templateColumns={`repeat(${columns.toString()}, 1fr)`}
-          templateRows={`repeat(${rows.toString()}, 1fr)`}
-          key={`${columns.toString()}x${rows.toString()}`}
+          templateColumns={`repeat(${columns}, 1fr)`}
+          templateRows={`repeat(${rows}, 1fr)`}
+          key={`${columns}x${rows}`}
         >
           {Array.from({ length: columns * rows }).map((_, i) => (
-            <GridItem
-              key={`panel-${i.toString()}-group-${columns.toString()}x${rows.toString()}`}
-              w="full"
-              h="full"
-            >
+            <GridItem key={`panel-${i}-group-${columns}x${rows}`} w="full" h="full">
               <Panel
                 imageIds={imageIds}
                 w="full"
@@ -87,8 +83,6 @@ function PanelGroup({ layout }: PanelGroupProps) {
         type="file"
         multiple
         onChange={(e) => {
-          console.log(e);
-          console.log(e.target.files);
           if (e.target.files) {
             console.log(Array.from(e.target.files));
             void handleFileChange(Array.from(e.target.files));

@@ -22,13 +22,19 @@ function App() {
     );
   }
 
+  const routes = [
+    { path: '/login', element: <Login />, allow: !isAuthenticated, redirect: '/' },
+    { path: '/register', element: <Register />, allow: !isAuthenticated, redirect: '/' },
+    { path: '/viewer', element: <Viewer />, allow: isAuthenticated, redirect: '/login' },
+    { path: '*', element: <></>, allow: false, redirect: '/viewer' },
+  ];
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <Login />} />
-        <Route path="/register" element={isAuthenticated ? <Navigate to="/" /> : <Register />} />
-        <Route path="/viewer" element={isAuthenticated ? <Viewer /> : <Navigate to="/login" />} />
-        <Route path="*" element={<Navigate to="/viewer" />} />
+        {routes.map(({ path, element, allow, redirect }) => (
+          <Route key={path} path={path} element={allow ? element : <Navigate to={redirect} />} />
+        ))}
       </Routes>
     </BrowserRouter>
   );

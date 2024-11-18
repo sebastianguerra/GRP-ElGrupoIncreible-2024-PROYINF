@@ -44,8 +44,8 @@ const Panel = forwardRef(function Panel(
   useEffect(() => {
     const viewport = renderingEngine.getViewport(viewportId) as Types.IStackViewport | undefined;
     if (viewport && imageIds.length > 0) {
-      void viewport.setStack(imageIds).then(() => {
-        renderingEngine.renderViewports([viewportId]);
+      viewport.setStack(imageIds).then(() => {
+      renderingEngine.renderViewports([viewportId]);
       });
     }
   }, [viewportId, imageIds]);
